@@ -32,7 +32,7 @@ export const ThreeGlobeComponent: React.FC = () => {
     renderer.setClearColor(0x000000, 0);
     mountRef.current.appendChild(renderer.domElement);
 
-    // Create globe with enhanced visibility
+    // Create dark Earth globe with realistic texture
     const globe = new ThreeGlobeLib()
       .globeImageUrl(
         "//cdn.jsdelivr.net/npm/three-globe/example/img/earth-blue-marble.jpg"
@@ -41,11 +41,17 @@ export const ThreeGlobeComponent: React.FC = () => {
         "//cdn.jsdelivr.net/npm/three-globe/example/img/earth-topology.png"
       );
 
-    // Add Earth's axial tilt
-    globe.rotation.z = (23.5 * Math.PI) / 180;
+    // Create a group for proper tilted rotation
+    const earthGroup = new THREE.Group();
 
-    // Add globe to scene
-    scene.add(globe);
+    // Add Earth's axial tilt to the group
+    earthGroup.rotation.z = (23.5 * Math.PI) / 180;
+
+    // Add globe to the tilted group instead of directly to scene
+    earthGroup.add(globe);
+
+    // Add the tilted group to scene
+    scene.add(earthGroup);
 
     // Generate random points for visual interest
     const pointsData = Array.from({ length: 150 }, () => ({
@@ -99,7 +105,7 @@ export const ThreeGlobeComponent: React.FC = () => {
     const animate = () => {
       frameRef.current = requestAnimationFrame(animate);
 
-      // Rotate globe
+      // Rotate the globe around its tilted axis (realistic Earth rotation)
       globe.rotation.y += 0.002;
 
       // Render
