@@ -1,12 +1,14 @@
 'use client';
 
-import TestContractABI from '@/abi/TestContract.json';
+import MapProverABI from '@/abi/MapProver.json';
+import MapVerifierABI from '@/abi/MapVerifier.json';
 import { Button, LiveFeedback } from '@worldcoin/mini-apps-ui-kit-react';
 import { MiniKit } from '@worldcoin/minikit-js';
 import { useWaitForTransactionReceipt } from '@worldcoin/minikit-react';
 import { useEffect, useState } from 'react';
 import { createPublicClient, http } from 'viem';
 import { worldchain } from 'viem/chains';
+
 
 /**
  * This component is used to get a token from a contract
@@ -19,7 +21,6 @@ import { worldchain } from 'viem/chains';
  */
 export const Transaction = () => {
   // See the code for this contract here: https://worldscan.org/address/0xF0882554ee924278806d708396F1a7975b732522#code
-  const myContractToken = '0xF0882554ee924278806d708396F1a7975b732522';
   const [buttonState, setButtonState] = useState<
     'pending' | 'success' | 'failed' | undefined
   >(undefined);

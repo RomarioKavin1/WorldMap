@@ -16,6 +16,7 @@
     "@tabler/icons": "^3.33.0",
     "@tabler/icons-react": "^3.33.0",
     "@types/three": "^0.176.0",
+    "@vlayer/sdk": "1.0.2-nightly-20250530-3f01bfdcfb6b20d608f7bcef25f9907164ad3966",
     "@worldcoin/mini-apps-ui-kit-react": "^1.0.2",
     "@worldcoin/minikit-js": "latest",
     "@worldcoin/minikit-react": "latest",
