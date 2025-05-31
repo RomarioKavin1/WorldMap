@@ -17,11 +17,11 @@ import {
   IconShield,
   IconLogout,
   IconCheck,
-  IconExternalLink,
-  IconCopyCheck,
 } from "@tabler/icons-react";
 import { RegisterButton } from "@/components/RegisterButton";
 import { Marble } from "@worldcoin/mini-apps-ui-kit-react";
+import { signOut } from "@/auth";
+import { useRouter } from "next/navigation";
 
 export default function ProfilePage() {
   const [isLoaded, setIsLoaded] = useState(false);
@@ -29,7 +29,7 @@ export default function ProfilePage() {
   const [copied, setCopied] = useState(false);
   const [session, setSession] = useState<any>(null);
   const [isLoadingSession, setIsLoadingSession] = useState(true);
-
+  const router = useRouter();
   // Fetch session data on component mount
   useEffect(() => {
     const loadSession = async () => {
@@ -360,7 +360,13 @@ export default function ProfilePage() {
             <div className="w-10 h-10 bg-red-500/20 rounded-lg flex items-center justify-center">
               <IconLogout size={20} className="text-red-400" />
             </div>
-            <div className="flex-1">
+            <div
+              className="flex-1"
+              onClick={() => {
+                signOut();
+                router.push("/");
+              }}
+            >
               <h3 className="text-red-400 font-medium text-sm">
                 Disconnect Wallet
               </h3>
