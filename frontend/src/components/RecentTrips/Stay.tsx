@@ -4,12 +4,19 @@ export interface StayData {
   id: string;
   location: string;
   country: string;
-  flag: string;
   dates: string;
   duration: string; // e.g., "3 nights", "1 week"
   accommodationType: "hotel" | "airbnb" | "hostel" | "resort" | "apartment";
-  icon: string;
 }
+
+import {
+  IconBuildingCottage,
+  IconHome,
+  IconBuilding,
+  IconBeach,
+  IconBuildings,
+  IconBed,
+} from "@tabler/icons-react";
 
 interface StayProps {
   stay: StayData;
@@ -19,17 +26,17 @@ interface StayProps {
 const getAccommodationIcon = (type: StayData["accommodationType"]) => {
   switch (type) {
     case "hotel":
-      return "🏨";
+      return <IconBuildingCottage size={14} />;
     case "airbnb":
-      return "🏠";
+      return <IconHome size={14} />;
     case "hostel":
-      return "🏢";
+      return <IconBuilding size={14} />;
     case "resort":
-      return "🏖️";
+      return <IconBeach size={14} />;
     case "apartment":
-      return "🏠";
+      return <IconBuildings size={14} />;
     default:
-      return "🏠";
+      return <IconHome size={14} />;
   }
 };
 
@@ -42,7 +49,7 @@ export const Stay: React.FC<StayProps> = ({ stay, onClick }) => {
       <div className="relative flex items-center space-x-3">
         {/* Stay Icon */}
         <div className="w-10 h-10 bg-white/10 rounded-lg flex items-center justify-center text-lg shadow-lg group-hover:scale-105 transition-transform duration-300">
-          {stay.icon}
+          <IconBed />
         </div>
 
         {/* Stay Details */}
@@ -52,7 +59,6 @@ export const Stay: React.FC<StayProps> = ({ stay, onClick }) => {
             <div className="bg-green-500/20 text-green-300 text-xs px-2 py-0.5 rounded-full font-medium">
               STAY
             </div>
-            <span className="text-sm">{stay.flag}</span>
             <span className="text-white font-medium text-sm truncate">
               {stay.location}
             </span>

@@ -15,7 +15,7 @@ export const Header = ({ showMeritModal = true }: HeaderProps) => {
       {/* Header */}
       <div className="absolute top-0 left-0 right-0 z-30 flex justify-between p-6">
         {/* Left Logo/Profile */}
-        <div className="w-8 h-8 border-2 border-white rounded-full bg-gradient-to-br from-blue-500 to-purple-500 flex items-center justify-center"></div>
+        <div className="w-8 h-8 border rounded-full bg-gradient-to-br from-blue-500 to-purple-500 flex items-center justify-center -ml-2"></div>
 
         {/* Center Logo */}
         <div className=" -mt-6">

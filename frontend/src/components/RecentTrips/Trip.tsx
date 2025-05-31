@@ -4,12 +4,15 @@ export interface TripData {
   id: string;
   fromCountry: string;
   toCountry: string;
-  fromFlag: string;
-  toFlag: string;
   date: string;
   travelType: "car" | "boat" | "flight";
-  icon: string;
 }
+import {
+  IconPlaneDeparture,
+  IconCar,
+  IconShip,
+  IconCactus,
+} from "@tabler/icons-react";
 
 interface TripProps {
   trip: TripData;
@@ -19,11 +22,11 @@ interface TripProps {
 const getTravelTypeIcon = (travelType: TripData["travelType"]) => {
   switch (travelType) {
     case "flight":
-      return "✈️";
+      return <IconPlaneDeparture size={14} />;
     case "car":
-      return "🚗";
+      return <IconCar size={14} />;
     case "boat":
-      return "🚢";
+      return <IconShip size={14} />;
     default:
       return "🌍";
   }
@@ -45,7 +48,7 @@ const getTravelTypeColor = (travelType: TripData["travelType"]) => {
 export const Trip: React.FC<TripProps> = ({ trip, onClick }) => {
   return (
     <div
-      className="relative bg-slate-900/70 backdrop-blur-xl rounded-xl p-3 transition-all duration-300 cursor-pointer group hover:bg-white/8 active:scale-[0.98]"
+      className="relative bg-white/7 backdrop-blur-xl rounded-xl p-3 transition-all duration-300 cursor-pointer group hover:bg-white/8 active:scale-[0.98]"
       onClick={() => onClick?.(trip)}
     >
       {/* Background Gradient Overlay */}
@@ -62,7 +65,7 @@ export const Trip: React.FC<TripProps> = ({ trip, onClick }) => {
             trip.travelType
           )} rounded-lg flex items-center justify-center text-lg shadow-lg group-hover:scale-105 transition-transform duration-300`}
         >
-          {trip.icon}
+          <IconCactus />
         </div>
 
         {/* Trip Details */}
@@ -72,11 +75,10 @@ export const Trip: React.FC<TripProps> = ({ trip, onClick }) => {
             <div className="bg-blue-500/20 text-blue-300 text-xs px-2 py-0.5 rounded-full font-medium">
               TRIP
             </div>
-            <span className="text-sm">{trip.fromFlag}</span>
             <span className="text-white font-medium text-sm truncate">
               {trip.fromCountry}
             </span>
-            <div className="flex items-center space-x-1">
+            <div className="flex items-center space-x-1 ">
               <span className="text-xs">
                 {getTravelTypeIcon(trip.travelType)}
               </span>
@@ -96,7 +98,6 @@ export const Trip: React.FC<TripProps> = ({ trip, onClick }) => {
             <span className="text-white font-medium text-sm truncate">
               {trip.toCountry}
             </span>
-            <span className="text-sm">{trip.toFlag}</span>
           </div>
 
           {/* Date and Travel Type */}
