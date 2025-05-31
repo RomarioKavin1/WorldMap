@@ -16,7 +16,7 @@ export const RecentTrips: React.FC = () => {
   const [drawerState, setDrawerState] = useState<DrawerState>("partial");
   const [isDragging, setIsDragging] = useState(false);
   const [startY, setStartY] = useState(0);
-  const [currentY, setCurrentY] = useState(0);
+  const [dragOffset, setDragOffset] = useState(0);
   const drawerRef = useRef<HTMLDivElement>(null);
 
   // Mock data - replace with real data later
@@ -75,13 +75,13 @@ export const RecentTrips: React.FC = () => {
   const getDrawerPosition = () => {
     switch (drawerState) {
       case "collapsed":
-        return "translate-y-[calc(100%-80px)]"; // Show only handle + small peek
+        return "calc(100% - 90px)";
       case "partial":
-        return "translate-y-[calc(100%-280px)]"; // Show header + few trips
+        return "calc(100% - 320px)";
       case "expanded":
-        return "translate-y-0"; // Full screen
+        return "0px";
       default:
-        return "translate-y-[calc(100%-280px)]";
+        return "calc(100% - 320px)";
     }
   };
 
@@ -89,33 +89,36 @@ export const RecentTrips: React.FC = () => {
   const handleDragStart = (clientY: number) => {
     setIsDragging(true);
     setStartY(clientY);
-    setCurrentY(clientY);
+    setDragOffset(0);
   };
 
   // Handle drag move
   const handleDragMove = useCallback(
     (clientY: number) => {
       if (!isDragging) return;
-      setCurrentY(clientY);
+
+      const deltaY = clientY - startY;
+      // Apply resistance for more natural feel
+      const resistance = 0.7;
+      setDragOffset(deltaY * resistance);
     },
-    [isDragging]
+    [isDragging, startY]
   );
 
   // Handle drag end
   const handleDragEnd = useCallback(() => {
     if (!isDragging) return;
 
-    const deltaY = currentY - startY;
-    const threshold = 50; // Minimum drag distance to trigger state change
+    const threshold = 60;
 
-    if (deltaY > threshold) {
+    if (dragOffset > threshold) {
       // Dragging down
       if (drawerState === "expanded") {
         setDrawerState("partial");
       } else if (drawerState === "partial") {
         setDrawerState("collapsed");
       }
-    } else if (deltaY < -threshold) {
+    } else if (dragOffset < -threshold) {
       // Dragging up
       if (drawerState === "collapsed") {
         setDrawerState("partial");
@@ -126,8 +129,8 @@ export const RecentTrips: React.FC = () => {
 
     setIsDragging(false);
     setStartY(0);
-    setCurrentY(0);
-  }, [isDragging, currentY, startY, drawerState]);
+    setDragOffset(0);
+  }, [isDragging, dragOffset, drawerState]);
 
   // Mouse events
   const handleMouseDown = (e: React.MouseEvent) => {
@@ -176,21 +179,13 @@ export const RecentTrips: React.FC = () => {
     }
   }, [isDragging, handleDragMove, handleDragEnd]);
 
-  // Calculate dynamic transform during drag
-  const getDynamicTransform = () => {
-    if (!isDragging) return "";
-
-    const deltaY = currentY - startY;
-    const baseTransform = getDrawerPosition();
-
-    // Apply drag offset with bounds
-    const maxDrag = 100; // Maximum drag distance
-    const boundedDelta = Math.max(-maxDrag, Math.min(maxDrag, deltaY));
-
-    return `${baseTransform.replace(
-      "translate-y-",
-      "translate-y-[calc("
-    )}+${boundedDelta}px)]`;
+  // Calculate final transform
+  const getTransform = () => {
+    const basePosition = getDrawerPosition();
+    if (isDragging && dragOffset !== 0) {
+      return `translateY(calc(${basePosition} + ${dragOffset}px))`;
+    }
+    return `translateY(${basePosition})`;
   };
 
   return (
@@ -198,7 +193,7 @@ export const RecentTrips: React.FC = () => {
       {/* Backdrop for expanded state */}
       {drawerState === "expanded" && (
         <div
-          className="fixed inset-0 bg-black/50 backdrop-blur-sm z-40 transition-opacity duration-300"
+          className="fixed inset-0 bg-black/40 backdrop-blur-sm z-40 transition-opacity duration-300"
           onClick={() => setDrawerState("partial")}
         />
       )}
@@ -206,20 +201,22 @@ export const RecentTrips: React.FC = () => {
       {/* Drawer Container */}
       <div
         ref={drawerRef}
-        className={`fixed bottom-0 left-0 right-0 z-50 transition-transform duration-300 ease-out ${
-          isDragging ? "" : getDrawerPosition()
+        className={`fixed bottom-0 left-0 right-0 z-50 ${
+          isDragging ? "" : "transition-transform duration-300 ease-out"
         }`}
-        style={isDragging ? { transform: getDynamicTransform() } : {}}
+        style={{
+          transform: getTransform(),
+        }}
       >
-        {/* Drawer Content */}
-        <div className="bg-black/95 backdrop-blur-3xl rounded-t-3xl border-t border-white/10 shadow-2xl">
+        {/* Glass Morphic Drawer Content */}
+        <div className="bg-black/90 backdrop-blur-2xl rounded-t-3xl border-t border-white/20 shadow-2xl">
           {/* Drag Handle */}
           <div
             className="flex justify-center pt-4 pb-2 cursor-grab active:cursor-grabbing"
             onMouseDown={handleMouseDown}
             onTouchStart={handleTouchStart}
           >
-            <div className="w-12 h-1.5 bg-white/30 rounded-full" />
+            <div className="w-12 h-1.5 bg-white/40 rounded-full" />
           </div>
 
           {/* Header */}
@@ -260,9 +257,9 @@ export const RecentTrips: React.FC = () => {
 
           {/* Content */}
           <div
-            className={`${
+            className={`transition-all duration-300 ${
               drawerState === "collapsed" ? "h-0 overflow-hidden" : "h-auto"
-            } transition-all duration-300`}
+            }`}
           >
             <div
               className={`p-6 ${
@@ -275,7 +272,7 @@ export const RecentTrips: React.FC = () => {
                 {recentTrips.map((trip) => (
                   <div
                     key={trip.id}
-                    className="bg-white/5 backdrop-blur-sm rounded-2xl p-4 border border-white/10 hover:bg-white/10 transition-all duration-200 cursor-pointer"
+                    className="bg-white/5 backdrop-opacity-20 backdrop-blur-sm rounded-2xl p-4 border border-white/10 hover:bg-white/10 transition-all duration-200 cursor-pointer"
                   >
                     <div className="flex items-center space-x-4">
                       <div className="w-12 h-12 bg-gradient-to-br from-blue-500/20 to-purple-500/20 rounded-xl flex items-center justify-center text-2xl">

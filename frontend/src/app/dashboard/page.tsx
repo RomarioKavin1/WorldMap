@@ -36,7 +36,7 @@ export default function Dashboard() {
             <div className="h-screen bg-black overflow-hidden mt-24">
               <ThreeGlobeHex
                 arcPaths={sampleArcPaths}
-                animationSpeed={2}
+                animationSpeed={7}
                 autoRotate={true}
               />
             </div>
