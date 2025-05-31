@@ -1,5 +1,6 @@
 "use client";
 import { useState, useRef, useEffect, useCallback } from "react";
+import { useRouter } from "next/navigation";
 import { Trip, TripData } from "./Trip";
 import { Stay, StayData } from "./Stay";
 
@@ -11,6 +12,7 @@ export const RecentTrips: React.FC = () => {
   const [startY, setStartY] = useState(0);
   const [dragOffset, setDragOffset] = useState(0);
   const drawerRef = useRef<HTMLDivElement>(null);
+  const router = useRouter();
 
   // Updated mock trip data
   const recentTrips: TripData[] = [
@@ -99,9 +101,10 @@ export const RecentTrips: React.FC = () => {
     return bMonth - aMonth; // Reverse chronological order
   });
 
-  // Handle trip click
+  // Handle trip click - navigate to trip detail page
   const handleTripClick = (trip: TripData) => {
     console.log("Trip clicked:", trip);
+    router.push(`/trip/${trip.id}`);
   };
 
   // Handle stay click
