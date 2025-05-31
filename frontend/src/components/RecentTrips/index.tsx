@@ -209,10 +209,14 @@ export const RecentTrips: React.FC = () => {
         }}
       >
         {/* Glass Morphic Drawer Content */}
-        <div className="bg-black/90 backdrop-blur-2xl rounded-t-3xl border-t border-white/20 shadow-2xl">
+        <div
+          className="bg-black/90 backdrop-blur-2xl rounded-t-3xl border-t border-white/20 shadow-2xl  active:cursor-grabbing"
+          onMouseDown={handleMouseDown}
+          onTouchStart={handleTouchStart}
+        >
           {/* Drag Handle */}
           <div
-            className="flex justify-center pt-4 pb-2 cursor-grab active:cursor-grabbing"
+            className="flex justify-center pt-4 pb-2 cursor-grab"
             onMouseDown={handleMouseDown}
             onTouchStart={handleTouchStart}
           >
