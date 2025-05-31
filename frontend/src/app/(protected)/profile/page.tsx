@@ -21,6 +21,7 @@ import {
   IconCopyCheck,
 } from "@tabler/icons-react";
 import { RegisterButton } from "@/components/RegisterButton";
+import { Marble } from "@worldcoin/mini-apps-ui-kit-react";
 
 export default function ProfilePage() {
   const [isLoaded, setIsLoaded] = useState(false);
@@ -57,14 +58,9 @@ export default function ProfilePage() {
   // Mock web3 user data with fallback
   const userData = {
     address:
-      session?.user?.username ||
-      session?.user?.address ||
-      "0x742d35Cc6C2bC5C1D8a87d2dC5C9F2d9D1e4A8B3",
+      session?.user?.address || "0x742d35Cc6C2bC5C1D8a87d2dC5C9F2d9D1e4A8B3",
     ensName: session?.user?.username || "traveler.eth",
     chainId: 1,
-    network: "Ethereum",
-    connectedSince: "March 2024",
-    walletType: "MetaMask",
   };
 
   // Mock stats
@@ -147,11 +143,14 @@ export default function ProfilePage() {
             <div className="flex items-center gap-4">
               <div className="relative">
                 <div className="w-20 h-20 bg-gradient-to-br from-blue-500/20 to-purple-500/20 rounded-full flex items-center justify-center">
-                  <IconWallet size={40} className="text-white/80" />
+                  <Marble
+                    src={session?.user?.profilePictureUrl}
+                    className="w-20 h-20"
+                  />
                 </div>
-                <div className="absolute -bottom-1 -right-1 w-8 h-8 bg-green-500/20 rounded-full flex items-center justify-center">
+                {/* <div className="absolute -bottom-1 -right-1 w-8 h-8 bg-green-500/20 rounded-full flex items-center justify-center">
                   <IconCheck size={16} className="text-green-400" />
-                </div>
+                </div> */}
               </div>
 
               <div className="flex-1">
@@ -160,7 +159,7 @@ export default function ProfilePage() {
                     {isLoadingSession ? (
                       <div className="h-6 w-32 bg-white/20 rounded animate-pulse" />
                     ) : (
-                      formatAddress(userData.address)
+                      userData.ensName
                     )}
                   </h2>
                   <div
@@ -174,16 +173,10 @@ export default function ProfilePage() {
                     )}
                   </div>
                 </div>
-                <p className="text-white/60 text-sm">
-                  Connected via {userData.walletType} • {userData.network}
-                </p>
-                <p className="text-white/40 text-xs">
-                  Since {userData.connectedSince}
-                </p>
-              </div>
 
-              <div className="w-8 h-8 bg-white/10 rounded-lg flex items-center justify-center">
-                <IconExternalLink size={16} className="text-white/60" />
+                <p className="text-white/40 text-xs">
+                  {formatAddress(userData.address)}
+                </p>
               </div>
             </div>
           </div>
@@ -206,7 +199,8 @@ export default function ProfilePage() {
                   Register Your Email
                 </h3>
                 <p className="text-white/60 text-sm">
-                  Register your email to start verifying travel bookings and earn merit miles
+                  Register your email to start verifying travel bookings and
+                  earn merit miles
                 </p>
               </div>
               <div className="flex-shrink-0">

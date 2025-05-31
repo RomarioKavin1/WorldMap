@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import { Logo } from "@/components/Logo";
 import Image from "next/image";
 import { Marble } from "@worldcoin/mini-apps-ui-kit-react";
+import { useRouter } from "next/navigation";
 
 interface HeaderProps {
   showMeritModal?: boolean; // For pages like merit-miles where modal isn't needed
@@ -42,6 +43,7 @@ const useSession = () => {
 export const Header = ({ showMeritModal = true }: HeaderProps) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const { session, isLoading } = useSession();
+  const router = useRouter();
 
   return (
     <>
@@ -55,6 +57,9 @@ export const Header = ({ showMeritModal = true }: HeaderProps) => {
             <Marble
               src={session?.user?.profilePictureUrl}
               className="w-8 h-8"
+              onClick={() => {
+                router.push("/profile");
+              }}
             />
           )}
         </div>
