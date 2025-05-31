@@ -20,7 +20,7 @@ import {
   IconExternalLink,
   IconCopyCheck,
 } from "@tabler/icons-react";
-import { auth } from "@/auth";
+import { RegisterButton } from "@/components/RegisterButton";
 
 export default function ProfilePage() {
   const [isLoaded, setIsLoaded] = useState(false);
@@ -153,6 +153,7 @@ export default function ProfilePage() {
                   <IconCheck size={16} className="text-green-400" />
                 </div>
               </div>
+
               <div className="flex-1">
                 <div className="flex items-center gap-2 mb-1">
                   <h2 className="text-xl font-semibold text-white">
@@ -173,9 +174,43 @@ export default function ProfilePage() {
                     )}
                   </div>
                 </div>
+                <p className="text-white/60 text-sm">
+                  Connected via {userData.walletType} • {userData.network}
+                </p>
+                <p className="text-white/40 text-xs">
+                  Since {userData.connectedSince}
+                </p>
               </div>
+
               <div className="w-8 h-8 bg-white/10 rounded-lg flex items-center justify-center">
                 <IconExternalLink size={16} className="text-white/60" />
+              </div>
+            </div>
+          </div>
+        </motion.div>
+
+        {/* Registration Section */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={isLoaded ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.5, delay: 0.25 }}
+          className="mb-8"
+        >
+          <div className="bg-white/5 backdrop-blur-xl rounded-2xl p-6">
+            <div className="flex items-center gap-4">
+              <div className="w-12 h-12 bg-gradient-to-br from-green-500/20 to-blue-500/20 rounded-full flex items-center justify-center">
+                <IconEdit size={24} className="text-white/80" />
+              </div>
+              <div className="flex-1">
+                <h3 className="text-lg font-semibold text-white mb-1">
+                  Register Your Email
+                </h3>
+                <p className="text-white/60 text-sm">
+                  Register your email to start verifying travel bookings and earn merit miles
+                </p>
+              </div>
+              <div className="flex-shrink-0">
+                <RegisterButton />
               </div>
             </div>
           </div>

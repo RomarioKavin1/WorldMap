@@ -15,7 +15,7 @@ import { X, Mail, User, CheckCircle, XCircle } from 'lucide-react';
  * Enhanced Registration component with modal interface and proper email validation
  * Uses the same Button and LiveFeedback pattern as other components in the app
  */
-export const Transaction = () => {
+export const RegisterButton = () => {
     const [buttonState, setButtonState] = useState<
         'pending' | 'success' | 'failed' | undefined
     >(undefined);
@@ -178,55 +178,52 @@ export const Transaction = () => {
     return (
         <>
             {/* Main Registration Button */}
-            <div className="grid w-full gap-4">
-                <p className="text-lg font-semibold">Registration</p>
-                <Button
-                    onClick={openModal}
-                    size="lg"
-                    variant="primary"
-                    className="w-full"
-                >
-                    Register Your Email
-                </Button>
-            </div>
+            <Button
+                onClick={openModal}
+                size="lg"
+                variant="primary"
+                className="w-full"
+            >
+                Register
+            </Button>
 
             {/* Registration Modal */}
             {isModalOpen && (
                 <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-                    <div className="bg-white rounded-2xl p-6 max-w-md w-full border border-gray-200 shadow-2xl">
+                    <div className="bg-black/80 backdrop-blur-xl rounded-2xl p-6 max-w-md w-full border border-white/10 shadow-2xl">
                         {/* Modal Header */}
                         <div className="flex items-center justify-between mb-6">
                             <div className="flex items-center gap-3">
-                                <div className="w-10 h-10 bg-blue-500 rounded-full flex items-center justify-center">
-                                    <User className="w-5 h-5 text-white" />
+                                <div className="w-10 h-10 bg-gradient-to-br from-green-500/20 to-blue-500/20 rounded-full flex items-center justify-center">
+                                    <User className="w-5 h-5 text-white/80" />
                                 </div>
-                                <h2 className="text-xl font-bold text-gray-900">Register Email</h2>
+                                <h2 className="text-xl font-bold text-white">Register Email</h2>
                             </div>
                             <button
                                 onClick={closeModal}
                                 disabled={buttonState === 'pending'}
-                                className="p-2 hover:bg-gray-100 rounded-full transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                                className="p-2 hover:bg-white/10 rounded-full transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                             >
-                                <X className="w-5 h-5 text-gray-500" />
+                                <X className="w-5 h-5 text-white/60" />
                             </button>
                         </div>
 
                         {/* Modal Content */}
                         <div className="space-y-6">
                             {/* Description */}
-                            <p className="text-gray-600 text-sm leading-relaxed">
+                            <p className="text-white/60 text-sm leading-relaxed">
                                 Register your email address to start verifying your travel bookings.
                                 This email will be used to match your booking confirmations.
                             </p>
 
                             {/* Email Input */}
                             <div className="space-y-2">
-                                <label htmlFor="email" className="block text-sm font-medium text-gray-700">
+                                <label htmlFor="email" className="block text-sm font-medium text-white/80">
                                     Email Address
                                 </label>
                                 <div className="relative">
                                     <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                        <Mail className="h-4 w-4 text-gray-400" />
+                                        <Mail className="h-4 w-4 text-white/40" />
                                     </div>
                                     <input
                                         id="email"
@@ -235,9 +232,9 @@ export const Transaction = () => {
                                         onChange={(e) => handleEmailChange(e.target.value)}
                                         disabled={buttonState === 'pending' || isValidatingEmail}
                                         placeholder="your@email.com"
-                                        className={`w-full pl-10 pr-10 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors disabled:bg-gray-50 disabled:cursor-not-allowed ${emailError
-                                            ? 'border-red-300 focus:ring-red-500 focus:border-red-500'
-                                            : 'border-gray-300'
+                                        className={`py-10 w-full pl-10 pr-10 bg-white/5 border rounded-lg focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500/50 transition-colors disabled:bg-white/5 disabled:cursor-not-allowed text-white placeholder:text-right placeholder:text-zinc-700 ${emailError
+                                            ? 'border-red-500/50 focus:ring-red-500/50 focus:border-red-500/50'
+                                            : 'border-white/10'
                                             }`}
                                     />
                                     {/* Validation Indicator */}
@@ -246,16 +243,16 @@ export const Transaction = () => {
                                             <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-blue-500"></div>
                                         )}
                                         {email && !emailError && !isValidatingEmail && validateEmail(email) && (
-                                            <CheckCircle className="h-4 w-4 text-green-500" />
+                                            <CheckCircle className="h-4 w-4 text-green-400" />
                                         )}
                                         {emailError && (
-                                            <XCircle className="h-4 w-4 text-red-500" />
+                                            <XCircle className="h-4 w-4 text-red-400" />
                                         )}
                                     </div>
                                 </div>
                                 {/* Error Message */}
                                 {emailError && (
-                                    <p className="text-red-600 text-sm mt-1 flex items-center gap-1">
+                                    <p className="text-red-400 text-sm mt-1 flex items-center gap-1">
                                         <XCircle className="h-3 w-3" />
                                         {emailError}
                                     </p>
@@ -282,15 +279,16 @@ export const Transaction = () => {
                                         isValidatingEmail
                                     }
                                     size="lg"
-                                    variant="primary"
-                                    className="w-full"
+                                    variant="secondary"
+                                    className="w-full bg-white/10 text-white"
+
                                 >
                                     {buttonState === 'pending' ? 'Registering...' : 'Register Email'}
                                 </Button>
                             </LiveFeedback>
 
                             {/* Additional Info */}
-                            <div className="text-xs text-gray-500 text-center space-y-1">
+                            <div className="text-xs text-white/40 text-center space-y-1">
                                 <p>• Each wallet can only register one email address</p>
                                 <p>• Email addresses cannot be shared between wallets</p>
                                 <p>• You can update your email later if needed</p>
