@@ -15,16 +15,16 @@ export const Logo = ({ size = "xl" }: LogoProps) => {
       marginClass: "-ml-1"
     },
     md: {
-      textClass: "text-xl",
+      textClass: "text-md",
       imageSize: 60,
       imageClass: "w-15 h-15",
       marginClass: "-ml-2"
     },
     lg: {
-      textClass: "text-2xl",
+      textClass: "text-xl",
       imageSize: 80,
       imageClass: "w-20 h-20",
-      marginClass: "-ml-3"
+      marginClass: "-ml-3 "
     },
     xl: {
       textClass: "text-3xl",
