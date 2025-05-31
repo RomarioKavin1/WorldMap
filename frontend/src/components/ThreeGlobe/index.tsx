@@ -8,7 +8,8 @@ export const ThreeGlobeComponent: React.FC = () => {
   const frameRef = useRef<number | undefined>(undefined);
 
   useEffect(() => {
-    if (!mountRef.current) return;
+    const mountElement = mountRef.current;
+    if (!mountElement) return;
 
     // Scene setup
     const scene = new THREE.Scene();
@@ -30,7 +31,7 @@ export const ThreeGlobeComponent: React.FC = () => {
     });
     renderer.setSize(window.innerWidth, window.innerHeight);
     renderer.setClearColor(0x000000, 0);
-    mountRef.current.appendChild(renderer.domElement);
+    mountElement.appendChild(renderer.domElement);
 
     // Create dark Earth globe with realistic texture
     const globe = new ThreeGlobeLib()
@@ -130,8 +131,8 @@ export const ThreeGlobeComponent: React.FC = () => {
       }
       window.removeEventListener("resize", handleResize);
 
-      if (mountRef.current && renderer.domElement) {
-        mountRef.current.removeChild(renderer.domElement);
+      if (mountElement && renderer.domElement) {
+        mountElement.removeChild(renderer.domElement);
       }
 
       // Dispose of Three.js objects

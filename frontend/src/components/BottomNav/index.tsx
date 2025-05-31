@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+/* eslint-disable react/prop-types */
 
 interface BottomNavProps {
   activeTab: string;
