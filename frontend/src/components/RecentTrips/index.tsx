@@ -6,73 +6,23 @@ import { Stay, StayData } from "./Stay";
 
 type DrawerState = "collapsed" | "partial" | "expanded";
 
-export const RecentTrips: React.FC = () => {
+interface RecentTripsProps {
+  trips: TripData[];
+  stays: StayData[];
+  highlightedTripId?: string;
+}
+
+export const RecentTrips: React.FC<RecentTripsProps> = ({
+  trips: recentTrips,
+  stays: recentStays,
+  highlightedTripId,
+}) => {
   const [drawerState, setDrawerState] = useState<DrawerState>("partial");
   const [isDragging, setIsDragging] = useState(false);
   const [startY, setStartY] = useState(0);
   const [dragOffset, setDragOffset] = useState(0);
   const drawerRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
-
-  // Updated mock trip data
-  const recentTrips: TripData[] = [
-    {
-      id: "1",
-      fromCountry: "USA",
-      toCountry: "Japan",
-      date: "Dec 2024",
-      travelType: "flight",
-    },
-    {
-      id: "2",
-      fromCountry: "Japan",
-      toCountry: "France",
-      date: "Nov 2024",
-      travelType: "flight",
-    },
-    {
-      id: "3",
-      fromCountry: "France",
-      toCountry: "USA",
-      date: "Oct 2024",
-      travelType: "flight",
-    },
-    {
-      id: "4",
-      fromCountry: "USA",
-      toCountry: "UK",
-      date: "Sep 2024",
-      travelType: "car",
-    },
-  ];
-
-  // Recent stays data
-  const recentStays: StayData[] = [
-    {
-      id: "s1",
-      location: "Tokyo",
-      country: "Japan",
-      dates: "Dec 15-20, 2024",
-      duration: "5 nights",
-      accommodationType: "hotel",
-    },
-    {
-      id: "s2",
-      location: "Paris",
-      country: "France",
-      dates: "Nov 10-17, 2024",
-      duration: "1 week",
-      accommodationType: "airbnb",
-    },
-    {
-      id: "s3",
-      location: "London",
-      country: "UK",
-      dates: "Sep 5-12, 2024",
-      duration: "1 week",
-      accommodationType: "hotel",
-    },
-  ];
 
   // Combine and sort trips and stays
   const recentActivities = [
@@ -320,6 +270,7 @@ export const RecentTrips: React.FC = () => {
                       key={activity.id}
                       trip={activity}
                       onClick={handleTripClick}
+                      isHighlighted={highlightedTripId === activity.id}
                     />
                   ) : (
                     <Stay

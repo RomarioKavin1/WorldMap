@@ -244,10 +244,10 @@ export default function TripDetailPage() {
       <div className="absolute top-20 left-4 z-50">
         <button
           onClick={() => router.back()}
-          className="flex items-center space-x-2 px-3 py-2 bg-black/50 backdrop-blur-md rounded-lg border border-white/10 hover:bg-black/70 transition-all duration-200"
+          className="flex items-center space-x-2 px-4 py-3 bg-white/5 backdrop-blur-xl rounded-xl hover:bg-white/10 transition-all duration-200"
         >
-          <IconArrowLeft size={16} />
-          <span className="text-sm">Back</span>
+          <IconArrowLeft size={18} className="text-white/80" />
+          <span className="text-sm text-white/80">Back</span>
         </button>
       </div>
 
@@ -262,53 +262,57 @@ export default function TripDetailPage() {
       </div>
 
       {/* Trip Details Section */}
-      <div className="flex-1 bg-gradient-to-b from-black/90 to-black p-6">
-        <div className="max-w-md mx-auto space-y-6">
-          {/* Trip Header */}
-          <div className="text-center">
-            <div
-              className={`w-16 h-16 bg-gradient-to-br ${getTravelTypeColor(
-                tripData.travelType
-              )} rounded-2xl flex items-center justify-center text-2xl shadow-xl mx-auto mb-4`}
-            >
-              {getTravelTypeIcon(tripData.travelType, 32)}
-            </div>
-            <h1 className="text-2xl font-bold text-white mb-2">
-              {tripData.fromCountry} → {tripData.toCountry}
-            </h1>
-            <div className="flex items-center justify-center space-x-2">
-              <div className="bg-blue-500/20 text-blue-300 text-sm px-3 py-1 rounded-full font-medium">
-                TRIP
+      <div className="flex-1 bg-black p-4 pb-20">
+        <div className="max-w-md mx-auto space-y-4">
+          {/* Trip Header Card */}
+          <div className="bg-white/5 backdrop-blur-xl rounded-2xl p-6">
+            <div className="text-center">
+              <div
+                className={`w-16 h-16 bg-gradient-to-br ${getTravelTypeColor(
+                  tripData.travelType
+                )} rounded-2xl flex items-center justify-center text-2xl mx-auto mb-4`}
+              >
+                {getTravelTypeIcon(tripData.travelType, 32)}
               </div>
-              <div className="bg-white/10 text-white text-sm px-3 py-1 rounded-full font-medium capitalize">
-                {tripData.travelType}
+              <h1 className="text-2xl font-bold text-white mb-3">
+                {tripData.fromCountry} → {tripData.toCountry}
+              </h1>
+              <div className="flex items-center justify-center space-x-2">
+                <div className="bg-blue-500/20 text-blue-300 text-xs px-3 py-1 rounded-full">
+                  TRIP
+                </div>
+                <div className="bg-white/10 text-white/80 text-xs px-3 py-1 rounded-full capitalize">
+                  {tripData.travelType}
+                </div>
               </div>
             </div>
           </div>
 
           {/* Trip Information Cards */}
-          <div className="space-y-4">
+          <div className="space-y-3">
             {/* Date Card */}
-            <div className="bg-white/5 backdrop-blur-xl rounded-xl p-4 border border-white/10">
+            <div className="bg-white/5 backdrop-blur-xl rounded-xl p-4">
               <div className="flex items-center space-x-3">
                 <div className="w-10 h-10 bg-blue-500/20 rounded-lg flex items-center justify-center">
                   <IconCalendar size={20} className="text-blue-400" />
                 </div>
-                <div>
-                  <h3 className="text-white font-medium">Travel Date</h3>
+                <div className="flex-1">
+                  <h3 className="text-white text-sm font-medium">
+                    Travel Date
+                  </h3>
                   <p className="text-white/60 text-sm">{tripData.date}</p>
                 </div>
               </div>
             </div>
 
             {/* Route Card */}
-            <div className="bg-white/5 backdrop-blur-xl rounded-xl p-4 border border-white/10">
+            <div className="bg-white/5 backdrop-blur-xl rounded-xl p-4">
               <div className="flex items-center space-x-3">
                 <div className="w-10 h-10 bg-green-500/20 rounded-lg flex items-center justify-center">
                   <IconMapPin size={20} className="text-green-400" />
                 </div>
                 <div className="flex-1">
-                  <h3 className="text-white font-medium">Route</h3>
+                  <h3 className="text-white text-sm font-medium">Route</h3>
                   <div className="flex items-center space-x-2 text-sm text-white/60">
                     <span>{tripData.fromCountry}</span>
                     <svg
@@ -318,6 +322,7 @@ export default function TripDetailPage() {
                       fill="none"
                       stroke="currentColor"
                       strokeWidth="2"
+                      className="text-white/40"
                     >
                       <path d="M5 12h14" />
                       <path d="m12 5 7 7-7 7" />
@@ -329,7 +334,7 @@ export default function TripDetailPage() {
             </div>
 
             {/* Travel Method Card */}
-            <div className="bg-white/5 backdrop-blur-xl rounded-xl p-4 border border-white/10">
+            <div className="bg-white/5 backdrop-blur-xl rounded-xl p-4">
               <div className="flex items-center space-x-3">
                 <div
                   className={`w-10 h-10 bg-gradient-to-br ${getTravelTypeColor(
@@ -338,41 +343,18 @@ export default function TripDetailPage() {
                 >
                   {getTravelTypeIcon(tripData.travelType, 20)}
                 </div>
-                <div>
-                  <h3 className="text-white font-medium">Travel Method</h3>
-                  <p className="text-white/60 text-sm capitalize">
-                    {tripData.travelType === "flight" && "Commercial Flight"}
+                <div className="flex-1">
+                  <h3 className="text-white text-sm font-medium">
+                    Travel Method
+                  </h3>
+                  <p className="text-white/60 text-sm">
+                    {tripData.travelType === "flight" && "Flight"}
                     {tripData.travelType === "car" && "Road Trip"}
                     {tripData.travelType === "boat" && "Maritime Journey"}
                   </p>
                 </div>
               </div>
             </div>
-
-            {/* Trip ID Card */}
-            <div className="bg-white/5 backdrop-blur-xl rounded-xl p-4 border border-white/10">
-              <div className="flex items-center space-x-3">
-                <div className="w-10 h-10 bg-purple-500/20 rounded-lg flex items-center justify-center">
-                  <IconClock size={20} className="text-purple-400" />
-                </div>
-                <div>
-                  <h3 className="text-white font-medium">Trip ID</h3>
-                  <p className="text-white/60 text-sm font-mono">
-                    #{tripData.id}
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Action Buttons */}
-          <div className="space-y-3 pt-4">
-            <button className="w-full py-3 bg-blue-600 hover:bg-blue-700 rounded-xl font-medium transition-colors">
-              Edit Trip Details
-            </button>
-            <button className="w-full py-3 bg-white/10 hover:bg-white/20 rounded-xl font-medium transition-colors border border-white/20">
-              Share Trip
-            </button>
           </div>
         </div>
       </div>
