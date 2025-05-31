@@ -67,8 +67,11 @@ export const Trip: React.FC<TripProps> = ({ trip, onClick }) => {
 
         {/* Trip Details */}
         <div className="flex-1 min-w-0">
-          {/* Route */}
+          {/* Route with Trip Tag */}
           <div className="flex items-center space-x-2 mb-1">
+            <div className="bg-blue-500/20 text-blue-300 text-xs px-2 py-0.5 rounded-full font-medium">
+              TRIP
+            </div>
             <span className="text-sm">{trip.fromFlag}</span>
             <span className="text-white font-medium text-sm truncate">
               {trip.fromCountry}

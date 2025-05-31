@@ -1,6 +1,7 @@
 "use client";
 import { useState, useRef, useEffect, useCallback } from "react";
 import { Trip, TripData } from "./Trip";
+import { Stay, StayData } from "./Stay";
 
 type DrawerState = "collapsed" | "partial" | "expanded";
 
@@ -11,7 +12,7 @@ export const RecentTrips: React.FC = () => {
   const [dragOffset, setDragOffset] = useState(0);
   const drawerRef = useRef<HTMLDivElement>(null);
 
-  // Updated mock data with new structure
+  // Updated mock trip data
   const recentTrips: TripData[] = [
     {
       id: "1",
@@ -53,32 +54,77 @@ export const RecentTrips: React.FC = () => {
       travelType: "car",
       icon: "🏰",
     },
+  ];
+
+  // Recent stays data
+  const recentStays: StayData[] = [
     {
-      id: "5",
-      fromCountry: "UK",
-      toCountry: "Australia",
-      fromFlag: "🇬🇧",
-      toFlag: "🇦🇺",
-      date: "Aug 2024",
-      travelType: "flight",
+      id: "s1",
+      location: "Tokyo",
+      country: "Japan",
+      flag: "🇯🇵",
+      dates: "Dec 15-20, 2024",
+      duration: "5 nights",
+      accommodationType: "hotel",
       icon: "🏙️",
     },
     {
-      id: "6",
-      fromCountry: "Australia",
-      toCountry: "UAE",
-      fromFlag: "🇦🇺",
-      toFlag: "🇦🇪",
-      date: "Jul 2024",
-      travelType: "boat",
-      icon: "🏢",
+      id: "s2",
+      location: "Paris",
+      country: "France",
+      flag: "🇫🇷",
+      dates: "Nov 10-17, 2024",
+      duration: "1 week",
+      accommodationType: "airbnb",
+      icon: "🗼",
+    },
+    {
+      id: "s3",
+      location: "London",
+      country: "UK",
+      flag: "🇬🇧",
+      dates: "Sep 5-12, 2024",
+      duration: "1 week",
+      accommodationType: "hotel",
+      icon: "🏰",
     },
   ];
+
+  // Combine and sort trips and stays
+  const recentActivities = [
+    ...recentTrips.map((trip) => ({ ...trip, type: "trip" as const })),
+    ...recentStays.map((stay) => ({ ...stay, type: "stay" as const })),
+  ].sort((a, b) => {
+    // Simple date sorting by month
+    const months = [
+      "Jan",
+      "Feb",
+      "Mar",
+      "Apr",
+      "May",
+      "Jun",
+      "Jul",
+      "Aug",
+      "Sep",
+      "Oct",
+      "Nov",
+      "Dec",
+    ];
+    const aDateStr = a.type === "trip" ? a.date : a.dates;
+    const bDateStr = b.type === "trip" ? b.date : b.dates;
+    const aMonth = months.findIndex((month) => aDateStr.includes(month));
+    const bMonth = months.findIndex((month) => bDateStr.includes(month));
+    return bMonth - aMonth; // Reverse chronological order
+  });
 
   // Handle trip click
   const handleTripClick = (trip: TripData) => {
     console.log("Trip clicked:", trip);
-    // Add your trip click logic here
+  };
+
+  // Handle stay click
+  const handleStayClick = (stay: StayData) => {
+    console.log("Stay clicked:", stay);
   };
 
   // Drawer positions (from bottom)
@@ -236,7 +282,7 @@ export const RecentTrips: React.FC = () => {
           {/* Header */}
           <div className="px-6 py-4 border-b border-white/10">
             <div className="flex items-center justify-between">
-              <h2 className="text-2xl font-bold text-white">Recent Trips</h2>
+              <h2 className="text-2xl font-bold text-white">Recent Activity</h2>
               <div className="flex items-center space-x-3">
                 <button className="text-blue-400 text-sm hover:text-blue-300 transition-colors">
                   View All
@@ -282,16 +328,30 @@ export const RecentTrips: React.FC = () => {
                   : "max-h-60 overflow-y-auto"
               }`}
             >
-              <div className="space-y-4">
-                {recentTrips.map((trip) => (
-                  <Trip key={trip.id} trip={trip} onClick={handleTripClick} />
-                ))}
+              <div className="space-y-3">
+                {recentActivities.map((activity) =>
+                  activity.type === "trip" ? (
+                    <Trip
+                      key={activity.id}
+                      trip={activity}
+                      onClick={handleTripClick}
+                    />
+                  ) : (
+                    <Stay
+                      key={activity.id}
+                      stay={activity}
+                      onClick={handleStayClick}
+                    />
+                  )
+                )}
               </div>
 
-              {recentTrips.length === 0 && (
+              {recentActivities.length === 0 && (
                 <div className="text-center py-12">
                   <div className="text-6xl mb-4">🌍</div>
-                  <h3 className="text-white/60 text-lg mb-2">No trips yet</h3>
+                  <h3 className="text-white/60 text-lg mb-2">
+                    No activities yet
+                  </h3>
                   <p className="text-white/40 text-sm">
                     Start exploring the world!
                   </p>
@@ -302,25 +362,20 @@ export const RecentTrips: React.FC = () => {
               {drawerState === "expanded" && (
                 <div className="mt-8 pt-6 border-t border-white/10">
                   <h3 className="text-xl font-semibold text-white mb-4">
-                    Trip Statistics
+                    Activity Statistics
                   </h3>
                   <div className="grid grid-cols-2 gap-4">
                     <div className="bg-white/5 rounded-xl p-4 text-center">
                       <div className="text-2xl font-bold text-blue-400">
                         {recentTrips.length}
                       </div>
-                      <div className="text-white/60 text-sm">Total Trips</div>
+                      <div className="text-white/60 text-sm">Trips</div>
                     </div>
                     <div className="bg-white/5 rounded-xl p-4 text-center">
                       <div className="text-2xl font-bold text-green-400">
-                        {
-                          new Set([
-                            ...recentTrips.map((t) => t.fromCountry),
-                            ...recentTrips.map((t) => t.toCountry),
-                          ]).size
-                        }
+                        {recentStays.length}
                       </div>
-                      <div className="text-white/60 text-sm">Countries</div>
+                      <div className="text-white/60 text-sm">Stays</div>
                     </div>
                   </div>
                 </div>
