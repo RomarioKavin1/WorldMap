@@ -1,10 +1,42 @@
 "use client";
 import { BottomNav } from "@/components/BottomNav";
 import { Header } from "@/components/Header";
-import { Trip, TripData } from "@/components/RecentTrips/Trip";
-import { Stay, StayData } from "@/components/RecentTrips/Stay";
+import { Trip, type TripData } from "@/components/RecentTrips/Trip";
+import { Stay, type StayData } from "@/components/RecentTrips/Stay";
+import { useEffect, useState } from "react";
+import {
+  BarChart,
+  Bar,
+  PieChart,
+  Pie,
+  Cell,
+  ResponsiveContainer,
+  LineChart,
+  Line,
+  XAxis,
+  YAxis,
+  Tooltip,
+} from "recharts";
+import { motion } from "framer-motion";
 
 export default function TripsPage() {
+  // Animation states
+  const [isLoaded, setIsLoaded] = useState(false);
+  const [currentSlide, setCurrentSlide] = useState(0);
+
+  useEffect(() => {
+    setIsLoaded(true);
+  }, []);
+
+  // Autoplay carousel
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentSlide((prev) => (prev + 1) % 4);
+    }, 4000); // Change slide every 4 seconds
+
+    return () => clearInterval(interval);
+  }, []);
+
   // Mock trip data
   const allTrips: TripData[] = [
     {
@@ -119,6 +151,41 @@ export default function TripsPage() {
   const carTrips = allTrips.filter((t) => t.travelType === "car").length;
   const boatTrips = allTrips.filter((t) => t.travelType === "boat").length;
 
+  // Chart data with muted colors
+  const transportData = [
+    { name: "Flight", value: flightCount, color: "rgba(255, 255, 255, 0.8)" },
+    { name: "Car", value: carTrips, color: "rgba(255, 255, 255, 0.6)" },
+    { name: "Boat", value: boatTrips, color: "rgba(255, 255, 255, 0.4)" },
+  ];
+
+  // Monthly trip distribution (mock data based on our trips)
+  const monthlyData = [
+    { month: "Aug", trips: 1 },
+    { month: "Sep", trips: 1 },
+    { month: "Oct", trips: 1 },
+    { month: "Nov", trips: 1 },
+    { month: "Dec", trips: 1 },
+  ];
+
+  // Accommodation types data with muted colors
+  const accommodationData = [
+    {
+      name: "Hotel",
+      value: allStays.filter((s) => s.accommodationType === "hotel").length,
+      color: "rgba(255, 255, 255, 0.8)",
+    },
+    {
+      name: "Airbnb",
+      value: allStays.filter((s) => s.accommodationType === "airbnb").length,
+      color: "rgba(255, 255, 255, 0.6)",
+    },
+    {
+      name: "Resort",
+      value: allStays.filter((s) => s.accommodationType === "resort").length,
+      color: "rgba(255, 255, 255, 0.4)",
+    },
+  ];
+
   // Combine and sort trips and stays by date (mock sorting)
   const allActivities = [
     ...allTrips.map((trip) => ({ ...trip, type: "trip" as const })),
@@ -154,6 +221,18 @@ export default function TripsPage() {
     console.log("Stay clicked:", stay);
   };
 
+  // Custom tooltip for charts
+  const CustomTooltip = ({ active, payload }: any) => {
+    if (active && payload && payload.length) {
+      return (
+        <div className="bg-slate-900/90 backdrop-blur-sm p-2 rounded-md border border-white/10 text-xs">
+          <p className="text-white">{`${payload[0].name}: ${payload[0].value}`}</p>
+        </div>
+      );
+    }
+    return null;
+  };
+
   return (
     <div className="min-h-screen bg-black text-white flex flex-col relative">
       {/* Header */}
@@ -169,115 +248,228 @@ export default function TripsPage() {
           </p>
         </div>
 
-        {/* Enhanced Statistics Grid */}
-        <div className="space-y-4 mb-8">
-          {/* Primary Stats Row */}
-          <div className="grid grid-cols-2 gap-4">
-            {/* Total Trips */}
-            <div className="relative bg-white/5 backdrop-blur-xl rounded-2xl p-5 border border-white/10 overflow-hidden">
-              <div className="absolute top-2 right-2 text-white/40 text-2xl">
-                ✈️
-              </div>
-              <div className="relative">
-                <div className="text-3xl font-bold text-white mb-1">
-                  {totalTrips}
-                </div>
-                <div className="text-white/80 text-sm font-medium">
-                  Total Trips
-                </div>
-                <div className="text-white/40 text-xs mt-1">
-                  Life adventures
-                </div>
-              </div>
-              <div className="absolute -bottom-4 -right-4 w-16 h-16 bg-white/5 rounded-full"></div>
-            </div>
-
-            {/* Countries Visited */}
-            <div className="relative bg-white/5 backdrop-blur-xl rounded-2xl p-5 border border-white/10 overflow-hidden">
-              <div className="absolute top-2 right-2 text-white/40 text-2xl">
-                🌍
-              </div>
-              <div className="relative">
-                <div className="text-3xl font-bold text-white mb-1">
-                  {uniqueCountries}
-                </div>
-                <div className="text-white/80 text-sm font-medium">
-                  Countries
-                </div>
-                <div className="text-white/40 text-xs mt-1">Explored</div>
-              </div>
-              <div className="absolute -bottom-4 -right-4 w-16 h-16 bg-white/5 rounded-full"></div>
-            </div>
+        {/* Statistics Carousel */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={isLoaded ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.5 }}
+          className="mb-8"
+        >
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-lg font-semibold text-white">
+              Travel Statistics
+            </h2>
           </div>
 
-          {/* Secondary Stats Row */}
-          <div className="grid grid-cols-3 gap-3">
-            {/* This Year */}
-            <div className="bg-white/5 backdrop-blur-xl rounded-xl p-4 border border-white/10">
-              <div className="text-center">
-                <div className="text-white/60 text-lg mb-2">📅</div>
-                <div className="text-2xl font-bold text-white mb-1">
-                  {thisYearTrips}
+          <div className="relative">
+            {/* Carousel Container */}
+            <div className="overflow-hidden rounded-2xl">
+              <motion.div
+                className="flex"
+                animate={{ x: `-${currentSlide * 100}%` }}
+                transition={{ type: "spring", stiffness: 300, damping: 30 }}
+              >
+                {/* Slide 1: Key Metrics */}
+                <div className="w-full flex-shrink-0">
+                  <div className="backdrop-blur-xl rounded-2xl p-6  mx-1">
+                    <h3 className="text-white/80 text-sm font-medium mb-6 text-center">
+                      Overview
+                    </h3>
+                    <div className="grid grid-cols-2 gap-6">
+                      <div className="text-center">
+                        <div className="text-3xl font-bold text-white mb-1">
+                          {totalTrips}
+                        </div>
+                        <div className="text-white/60 text-sm">Total Trips</div>
+                        <div className="text-white/40 text-xs mt-1">
+                          ✈️ Adventures
+                        </div>
+                      </div>
+                      <div className="text-center">
+                        <div className="text-3xl font-bold text-white mb-1">
+                          {uniqueCountries}
+                        </div>
+                        <div className="text-white/60 text-sm">Countries</div>
+                        <div className="text-white/40 text-xs mt-1">
+                          🌍 Explored
+                        </div>
+                      </div>
+                      <div className="text-center">
+                        <div className="text-2xl font-bold text-white mb-1">
+                          {totalStays}
+                        </div>
+                        <div className="text-white/60 text-sm">Total Stays</div>
+                        <div className="text-white/40 text-xs mt-1">
+                          🏠 Nights
+                        </div>
+                      </div>
+                      <div className="text-center">
+                        <div className="text-2xl font-bold text-white mb-1">
+                          {thisYearTrips}
+                        </div>
+                        <div className="text-white/60 text-sm">This Year</div>
+                        <div className="text-white/40 text-xs mt-1">
+                          📅 Recent
+                        </div>
+                      </div>
+                    </div>
+                  </div>
                 </div>
-                <div className="text-white/60 text-xs">This Year</div>
-              </div>
+
+                {/* Slide 2: Transport Methods */}
+                <div className="w-full flex-shrink-0">
+                  <div className=" backdrop-blur-xl rounded-2xl p-6 mx-1">
+                    <h3 className="text-white/80 text-sm font-medium mb-4 text-center">
+                      Transport Methods
+                    </h3>
+                    <div className="h-[200px]">
+                      <ResponsiveContainer width="100%" height="100%">
+                        <PieChart>
+                          <Pie
+                            data={transportData}
+                            cx="50%"
+                            cy="50%"
+                            innerRadius={50}
+                            outerRadius={80}
+                            paddingAngle={3}
+                            dataKey="value"
+                            animationBegin={300}
+                            animationDuration={1000}
+                          >
+                            {transportData.map((entry, index) => (
+                              <Cell key={`cell-${index}`} fill={entry.color} />
+                            ))}
+                          </Pie>
+                          <Tooltip content={<CustomTooltip />} />
+                        </PieChart>
+                      </ResponsiveContainer>
+                    </div>
+                    <div className="flex justify-center gap-4 mt-2">
+                      {transportData.map((item, index) => (
+                        <div key={index} className="flex items-center gap-2">
+                          <div
+                            className="w-2 h-2 rounded-full"
+                            style={{ backgroundColor: item.color }}
+                          ></div>
+                          <span className="text-xs text-white/70">
+                            {item.name}
+                          </span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+
+                {/* Slide 3: Monthly Distribution */}
+                <div className="w-full flex-shrink-0">
+                  <div className=" backdrop-blur-xl rounded-2xl p-6 mx-1">
+                    <h3 className="text-white/80 text-sm font-medium mb-4 text-center">
+                      Monthly Activity
+                    </h3>
+                    <div className="h-[200px]">
+                      <ResponsiveContainer width="100%" height="100%">
+                        <LineChart data={monthlyData}>
+                          <XAxis
+                            dataKey="month"
+                            tick={{
+                              fill: "rgba(255, 255, 255, 0.5)",
+                              fontSize: 11,
+                            }}
+                            axisLine={{ stroke: "rgba(255, 255, 255, 0.1)" }}
+                            tickLine={false}
+                          />
+                          <YAxis
+                            tick={{
+                              fill: "rgba(255, 255, 255, 0.5)",
+                              fontSize: 11,
+                            }}
+                            axisLine={{ stroke: "rgba(255, 255, 255, 0.1)" }}
+                            tickLine={false}
+                          />
+                          <Tooltip content={<CustomTooltip />} />
+                          <Line
+                            type="monotone"
+                            dataKey="trips"
+                            stroke="rgba(255, 255, 255, 0.8)"
+                            strokeWidth={2}
+                            dot={{ fill: "rgba(255, 255, 255, 0.8)", r: 3 }}
+                            activeDot={{
+                              r: 5,
+                              fill: "#fff",
+                              stroke: "rgba(255, 255, 255, 0.8)",
+                            }}
+                            animationDuration={1500}
+                          />
+                        </LineChart>
+                      </ResponsiveContainer>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Slide 4: Accommodation Types */}
+                <div className="w-full flex-shrink-0">
+                  <div className="backdrop-blur-xl rounded-2xl p-6 mx-1">
+                    <h3 className="text-white/80 text-sm font-medium mb-4 text-center">
+                      Accommodation
+                    </h3>
+                    <div className="h-[200px]">
+                      <ResponsiveContainer width="100%" height="100%">
+                        <BarChart data={accommodationData}>
+                          <XAxis
+                            dataKey="name"
+                            tick={{
+                              fill: "rgba(255, 255, 255, 0.5)",
+                              fontSize: 11,
+                            }}
+                            axisLine={{ stroke: "rgba(255, 255, 255, 0.1)" }}
+                            tickLine={false}
+                          />
+                          <YAxis
+                            tick={{
+                              fill: "rgba(255, 255, 255, 0.5)",
+                              fontSize: 11,
+                            }}
+                            axisLine={{ stroke: "rgba(255, 255, 255, 0.1)" }}
+                            tickLine={false}
+                          />
+                          <Tooltip content={<CustomTooltip />} />
+                          <Bar
+                            dataKey="value"
+                            animationDuration={1500}
+                            radius={[4, 4, 0, 0]}
+                          >
+                            {accommodationData.map((entry, index) => (
+                              <Cell key={`cell-${index}`} fill={entry.color} />
+                            ))}
+                          </Bar>
+                        </BarChart>
+                      </ResponsiveContainer>
+                    </div>
+                  </div>
+                </div>
+              </motion.div>
             </div>
 
-            {/* Flights */}
-            <div className="bg-white/5 backdrop-blur-xl rounded-xl p-4 border border-white/10">
-              <div className="text-center">
-                <div className="text-white/60 text-lg mb-2">🛩️</div>
-                <div className="text-2xl font-bold text-white mb-1">
-                  {flightCount}
-                </div>
-                <div className="text-white/60 text-xs">Flights</div>
-              </div>
-            </div>
-
-            {/* Total Stays */}
-            <div className="bg-white/5 backdrop-blur-xl rounded-xl p-4 border border-white/10">
-              <div className="text-center">
-                <div className="text-white/60 text-lg mb-2">🏠</div>
-                <div className="text-xl font-bold text-white mb-1">
-                  {totalStays}
-                </div>
-                <div className="text-white/60 text-xs">Stays</div>
-              </div>
+            {/* Dot Navigation */}
+            <div className="flex justify-center gap-2 mt-4 z-10">
+              {[0, 1, 2, 3].map((index) => (
+                <button
+                  key={index}
+                  onClick={() => setCurrentSlide(index)}
+                  className={`w-2 h-2 rounded-full transition-all duration-300 ${
+                    currentSlide === index ? "bg-white" : "bg-white/30"
+                  }`}
+                >
+                  <div
+                    className={`w-2 h-2 rounded-full transition-all duration-300 ${
+                      currentSlide === index ? "bg-white" : "bg-white/30"
+                    }`}
+                  ></div>
+                </button>
+              ))}
             </div>
           </div>
-
-          {/* Travel Methods Breakdown */}
-          <div className="bg-white/5 backdrop-blur-xl rounded-2xl p-5 border border-white/10">
-            <h3 className="text-white font-semibold mb-4 text-sm">
-              Travel Methods
-            </h3>
-            <div className="grid grid-cols-3 gap-4">
-              <div className="text-center">
-                <div className="w-12 h-12 bg-white/10 rounded-full flex items-center justify-center mx-auto mb-2">
-                  <span className="text-lg">✈️</span>
-                </div>
-                <div className="text-lg font-bold text-white">
-                  {flightCount}
-                </div>
-                <div className="text-white/60 text-xs">Flights</div>
-              </div>
-              <div className="text-center">
-                <div className="w-12 h-12 bg-white/10 rounded-full flex items-center justify-center mx-auto mb-2">
-                  <span className="text-lg">🚗</span>
-                </div>
-                <div className="text-lg font-bold text-white">{carTrips}</div>
-                <div className="text-white/60 text-xs">Car</div>
-              </div>
-              <div className="text-center">
-                <div className="w-12 h-12 bg-white/10 rounded-full flex items-center justify-center mx-auto mb-2">
-                  <span className="text-lg">🚢</span>
-                </div>
-                <div className="text-lg font-bold text-white">{boatTrips}</div>
-                <div className="text-white/60 text-xs">Boat</div>
-              </div>
-            </div>
-          </div>
-        </div>
+        </motion.div>
 
         {/* Activities Section Header */}
         <div className="flex items-center justify-between mb-4">

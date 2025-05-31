@@ -13,16 +13,23 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@tabler/icons": "^3.33.0",
+    "@tabler/icons-react": "^3.33.0",
     "@types/three": "^0.176.0",
     "@worldcoin/mini-apps-ui-kit-react": "^1.0.2",
     "@worldcoin/minikit-js": "latest",
     "@worldcoin/minikit-react": "latest",
+    "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
+    "framer": "^2.4.1",
+    "framer-motion": "^12.15.0",
     "iconoir-react": "^7.11.0",
+    "lucide-react": "^0.511.0",
     "next": "15.2.3",
     "next-auth": "^5.0.0-beta.25",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
+    "recharts": "^2.15.3",
     "tailwind-merge": "^3.2.0",
     "three": "^0.177.0",
     "three-globe": "^2.42.8",
@@ -38,6 +45,7 @@
     "eslint": "^9",
     "eslint-config-next": "15.2.3",
     "tailwindcss": "^4",
+    "tw-animate-css": "^1.3.2",
     "typescript": "^5"
   },
   "packageManager": "pnpm@10.10.0+sha512.d615db246fe70f25dcfea6d8d73dee782ce23e2245e3c4f6f888249fb568149318637dca73c2c5c8ef2a4ca0d5657fb9567188bfab47f566d1ee6ce987815c39"
