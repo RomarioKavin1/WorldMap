@@ -1,0 +1,2643 @@
+Delivered-To: fabianferno@gmail.com
+Received: by 2002:a9d:6753:0:b0:71e:1acc:ee8f with SMTP id w19csp1701954otm;
+        Sun, 15 Dec 2024 08:50:27 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IF4qZmFLp8oDCCMBIGrCjynTLrnQ9+aYwX2mFatVpQ6EGB8ZHmbmWKelNjm1TZq4WvBzihy
+X-Received: by 2002:a05:6a20:431e:b0:1e1:161a:fb0a with SMTP id adf61e73a8af0-1e1dfd6eea8mr16145695637.20.1734281426931;
+        Sun, 15 Dec 2024 08:50:26 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1734281426; cv=none;
+        d=google.com; s=arc-20240605;
+        b=WzknufTpbONSxifDfz/iI85uxLUj2fg+IzO+8vzgLZCyOsjU/wCLiw83ABA/OZWR4Q
+         aYJp2rG6ktGg1G/y/O//e8uMjLi9DW5q5JIj4VUrWRQ1DtRLI0jvRcepPmH3b4aswyrP
+         IJggNwkGeaHFpsK4dXjRMHuYjaVRaZhvnOK9RIcHOYvubYvkJetixFPIsJJ/RKdmHZnE
+         /3D5SFFUTSLk363PNyWemsUFCM2+S2uM49/43SffR5u2ZIJMHvVagnWXag4yqKUQrLCc
+         XQZc9d+ljN5dbRxdhCc5LTzjiObnLYtTPq7GdhDpLyQCMRMvk0+JW3O7h0IVjkw3kbzC
+         ke/A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=feedback-id:message-id:content-transfer-encoding:subject:to:from
+         :date:mime-version:dkim-signature:dkim-signature;
+        bh=4AVhofcmzHoKVmwylugQYKIq+fZ6jMrQzQGXaDPYk3I=;
+        fh=BGB+bJ9kQ8r8KUzI7JSuLNeUFYX0PJpuiyh21RtmuKw=;
+        b=SajoqEYzslJijeq9FFAWPHLb/vKnSzzHlPpzO8sF4M48dhqmLKLTWqktD03i8UowQi
+         1m0u0GvYwmvMgagQqQmNZy7J16/+Guo2I6RU25uCsb/7F6auUHaUz+yjUo8dRNCcWmcX
+         MEAV3++lqcNee4Afg+QsmigWRjkZaPDFc/H2m4RmbvxKw+zjZl3mQafofR562ICgcvF6
+         0sFz1fNP1ddQAXuMXrPHkYGOasLhPuZFbwLZc58rkBiDkTLCVOCjbkmN28c2iFjrRpKG
+         tmcv4TSuaqHozcfVxiBRPMip8r6Ou/PyV5Ycgpie6zAknYEC3ji+QzLUiB0ipfDBgRxG
+         wzUQ==;
+        dara=google.com
+ARC-Authentication-Results: i=1; mx.google.com;
+       dkim=pass header.i=@redbus.in header.s=ykxlwjguup3jyahmfzhpu4rnxoxbuzw4 header.b=fU5FbfEH;
+       dkim=pass header.i=@amazonses.com header.s=iowwo7fd7wqffpmrry5t52h55zq2wg7s header.b=aQXStYOK;
+       spf=pass (google.com: domain of 010e0193cb3a72b4-d4308ec3-ebc5-49ca-842c-df68a893a205-000000@ap-southeast-1.amazonses.com designates 23.251.232.54 as permitted sender) smtp.mailfrom=010e0193cb3a72b4-d4308ec3-ebc5-49ca-842c-df68a893a205-000000@ap-southeast-1.amazonses.com;
+       dmarc=pass (p=QUARANTINE sp=QUARANTINE dis=NONE) header.from=redbus.in
+Return-Path: <010e0193cb3a72b4-d4308ec3-ebc5-49ca-842c-df68a893a205-000000@ap-southeast-1.amazonses.com>
+Received: from e232-54.smtp-out.ap-southeast-1.amazonses.com (e232-54.smtp-out.ap-southeast-1.amazonses.com. [23.251.232.54])
+        by mx.google.com with ESMTPS id 41be03b00d2f7-801d5a9d953si3859874a12.34.2024.12.15.08.50.25
+        for <fabianferno@gmail.com>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 15 Dec 2024 08:50:26 -0800 (PST)
+Received-SPF: pass (google.com: domain of 010e0193cb3a72b4-d4308ec3-ebc5-49ca-842c-df68a893a205-000000@ap-southeast-1.amazonses.com designates 23.251.232.54 as permitted sender) client-ip=23.251.232.54;
+Authentication-Results: mx.google.com;
+       dkim=pass header.i=@redbus.in header.s=ykxlwjguup3jyahmfzhpu4rnxoxbuzw4 header.b=fU5FbfEH;
+       dkim=pass header.i=@amazonses.com header.s=iowwo7fd7wqffpmrry5t52h55zq2wg7s header.b=aQXStYOK;
+       spf=pass (google.com: domain of 010e0193cb3a72b4-d4308ec3-ebc5-49ca-842c-df68a893a205-000000@ap-southeast-1.amazonses.com designates 23.251.232.54 as permitted sender) smtp.mailfrom=010e0193cb3a72b4-d4308ec3-ebc5-49ca-842c-df68a893a205-000000@ap-southeast-1.amazonses.com;
+       dmarc=pass (p=QUARANTINE sp=QUARANTINE dis=NONE) header.from=redbus.in
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
+	s=ykxlwjguup3jyahmfzhpu4rnxoxbuzw4; d=redbus.in; t=1734281425;
+	h=Mime-Version:Date:From:To:Subject:Content-Type:Content-Transfer-Encoding:Message-ID;
+	bh=8U6foh/3IZL4s00nlMVV1ccQ3mMToyQOYrrJcpEOMoo=;
+	b=fU5FbfEHBrmmAeG2LkvLtaByvjywDYBitRy02ukPrAem9zn1isrMuJlhTQWQx18x
+	/zIysjZEoxQgjkzpbJTVbDCP+yFN/ZSG/mj4E4rEabBFIA5JjoLExPJx9jYh0HpWs0C
+	oqZYpYLDcRVxoYesXflHTOhfLX26I+2bDdXCqFLs=
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
+	s=iowwo7fd7wqffpmrry5t52h55zq2wg7s; d=amazonses.com; t=1734281425;
+	h=Mime-Version:Date:From:To:Subject:Content-Type:Content-Transfer-Encoding:Message-ID:Feedback-ID;
+	bh=8U6foh/3IZL4s00nlMVV1ccQ3mMToyQOYrrJcpEOMoo=;
+	b=aQXStYOK1iUDJRKOzLShRJB45i9xjaty9tUnundDjm+TTM/5V14PydW7TogI0Mxk
+	iiiazmmXQY4suCMVDgkn3XY/y7f5DCXOUvQoxQogdzXhS+nKw7CEesyLScUXiTgxpwi
+	7MV/DDRJYZR2ChPogooLWFFMSUP0mBp3lid1hS1M=
+Mime-Version: 1.0
+Date: Sun, 15 Dec 2024 16:50:25 +0000
+From: redBus <no-reply@redbus.in>
+To: fabianferno@gmail.com
+Subject: redBus Ticket - TTDB81841838
+Content-Type: text/html; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+Message-ID: <010e0193cb3a72b4-d4308ec3-ebc5-49ca-842c-df68a893a205-000000@ap-southeast-1.amazonses.com>
+Feedback-ID: ::1.ap-southeast-1.0VjPyAHMMVlK9cpBhsTpg2C9YdowLWmbJfEpCqd6dpI=:AmazonSES
+X-SES-Outgoing: 2024.12.15-23.251.232.54
+
+<html lang=3D"en">
+
+<head>
+    <title>redBus</title>
+    <meta http-equiv=3D"Content-Type" content=3D"text/html; charset=3Dutf-8=
+" />
+    <meta name=3D"viewport" content=3D"width=3Ddevice-width, initial-scale=
+=3D1">
+    <meta http-equiv=3D"X-UA-Compatible" content=3D"IE=3Dedge" />
+    <style type=3D"text/css">
+        /* cyrillic-ext */
+        @font-face {
+            font-family: 'Montserrat';
+            font-style: normal;
+            font-weight: 400;
+            src: local('Montserrat Regular'), local('Montserrat-Regular'), =
+url(https://fonts.gstatic.com/s/montserrat/v14/JTUSjIg1_i6t8kCHKm459WRhyyTh=
+89ZNpQ.woff2) format('woff2');
+            unicode-range: U+0460-052F, U+1C80-1C88, U+20B4, U+2DE0-2DFF, U=
++A640-A69F, U+FE2E-FE2F;
+        }
+
+        /* cyrillic */
+        @font-face {
+            font-family: 'Montserrat';
+            font-style: normal;
+            font-weight: 400;
+            src: local('Montserrat Regular'), local('Montserrat-Regular'), =
+url(https://fonts.gstatic.com/s/montserrat/v14/JTUSjIg1_i6t8kCHKm459W1hyyTh=
+89ZNpQ.woff2) format('woff2');
+            unicode-range: U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+        }
+
+        /* vietnamese */
+        @font-face {
+            font-family: 'Montserrat';
+            font-style: normal;
+            font-weight: 400;
+            src: local('Montserrat Regular'), local('Montserrat-Regular'), =
+url(https://fonts.gstatic.com/s/montserrat/v14/JTUSjIg1_i6t8kCHKm459WZhyyTh=
+89ZNpQ.woff2) format('woff2');
+            unicode-range: U+0102-0103, U+0110-0111, U+0128-0129, U+0168-01=
+69, U+01A0-01A1, U+01AF-01B0, U+1EA0-1EF9, U+20AB;
+        }
+
+        /* latin-ext */
+        @font-face {
+            font-family: 'Montserrat';
+            font-style: normal;
+            font-weight: 400;
+            src: local('Montserrat Regular'), local('Montserrat-Regular'), =
+url(https://fonts.gstatic.com/s/montserrat/v14/JTUSjIg1_i6t8kCHKm459WdhyyTh=
+89ZNpQ.woff2) format('woff2');
+            unicode-range: U+0100-024F, U+0259, U+1E00-1EFF, U+2020, U+20A0=
+-20AB, U+20AD-20CF, U+2113, U+2C60-2C7F, U+A720-A7FF;
+        }
+
+        /* latin */
+        @font-face {
+            font-family: 'Montserrat';
+            font-style: normal;
+            font-weight: 400;
+            src: local('Montserrat Regular'), local('Montserrat-Regular'), =
+url(https://fonts.gstatic.com/s/montserrat/v14/JTUSjIg1_i6t8kCHKm459WlhyyTh=
+89Y.woff2) format('woff2');
+            unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U=
++02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193,=
+ U+2212, U+2215, U+FEFF, U+FFFD;
+        }
+
+        /* CLIENT-SPECIFIC STYLES */
+        body,
+        table,
+        td,
+        a {
+            -webkit-text-size-adjust: 100%;
+            -ms-text-size-adjust: 100%;
+        }
+
+        table,
+        td {
+            mso-table-lspace: 0pt;
+            mso-table-rspace: 0pt;
+        }
+
+        img {
+            -ms-interpolation-mode: bicubic;
+        }
+
+        /* RESET STYLES */
+        img {
+            border: 0;
+            height: auto;
+            line-height: 100%;
+            outline: none;
+            text-decoration: none;
+        }
+
+        table {
+            border-collapse: collapse !important;
+        }
+
+        body {
+            height: 100% !important;
+            margin: 0 !important;
+            padding: 0 !important;
+            width: 100% !important;
+        }
+
+        /* iOS BLUE LINKS */
+        a[x-apple-data-detectors] {
+            color: inherit !important;
+            text-decoration: none !important;
+            font-size: inherit !important;
+            font-family: inherit !important;
+            font-weight: inherit !important;
+            line-height: inherit !important;
+        }
+
+        /* GMAIL BLUE LINKS */
+        u+#body a {
+            color: inherit;
+            text-decoration: none;
+            font-size: inherit;
+            font-family: inherit;
+            font-weight: inherit;
+            line-height: inherit;
+        }
+
+        /* SAMSUNG MAIL BLUE LINKS */
+        #MessageViewBody a {
+            color: inherit;
+            text-decoration: none;
+            font-size: inherit;
+            font-family: inherit;
+            font-weight: inherit;
+            line-height: inherit;
+        }
+
+        /* Universal styles for links and stuff */
+        a {
+            color: #229efd;
+            font-weight: bold;
+        }
+
+        a:hover {
+            color: #fd6350;
+            text-decoration: none;
+        }
+
+        a.button:hover {
+            background-color: #fd6350 !important;
+        }
+
+        /* Responsive styles */
+        @media screen and (max-width: 600px) {
+            .mobile {
+                width: 100% !important;
+            }
+
+            .ticketDetails {
+                width: 95% !important;
+                border-radius: 4px;
+            }
+
+            h1 {
+                font-size: 24px !important;
+            }
+        }
+
+        @media screen and (max-width: 550px) {
+            .small-screen {
+                width: 100% !important;
+            }
+
+            .small-screen-half-width {
+                width: 48% !important;
+            }
+        }
+
+        #header {
+            padding: 20px;
+            background-color: #d84e55;
+            color: white;
+        }
+
+        #header .content {
+            background-image: url(https://st.redbus.in/redbus/emails/images=
+/bg-graphics.png);
+            background-repeat: no-repeat;
+            height: 127px;
+        }
+
+        .popup1 {
+            *display: inline-block;
+            width: 600px;
+            height: 150px;
+            vertical-align: top;
+            align: center;
+            border-radius: 4px;
+            border-bottom: 0px;
+            margin: 0 auto;
+            background-color: antiquewhite;
+        }
+
+        .guidelines1 {
+            border-radius: 0px 0px 7px 7px;
+            border-bottom: 0px;
+            margin: 0 auto;
+            background-color: antiquewhite;
+        }
+
+        .guidelines2 {
+            border-radius: 0px 0px 7px 7px;
+            border-top: 0px;
+            border-bottom: 0px;
+            border: solid 0px black;
+            margin: 0 auto;
+            background-color: antiquewhite;
+        }
+
+        .redbuddy {
+            border: solid 1px black;
+            border-left: 0px;
+            border-right: 0px;
+            border-bottom: 0px;
+            margin: 0 auto;
+            background-color: white;
+        }
+
+        .know {
+            border: solid 0px black;
+            width: 520px;
+            border-radius: 4px;
+            margin: 0 auto;
+            background-color: #f8f4f4;
+            height: 260;
+            padding-top: 15px;
+            padding-left: 15px;
+        }
+
+        #my-div {
+            background-color: white;
+            width: 480px;
+            height: 100px;
+            border: solid 1px black;
+            align: center;
+            padding-left: 100px;
+            margin: 0px auto;
+        }
+
+        a.fill-div {
+            display: block;
+            height: 100%;
+            width: 100%;
+            align: center;
+            text-decoration: none;
+        }
+
+        sammy-wrap {
+            border-radius: 6px;
+            background-color: aliceblue;
+            border: 1px dashed gray;
+            /* max-width: 80%; padding: 1em; margin-bottom: .4em; */
+            font-family: Montserrat;
+            font-size: 14px;
+            font-weight: bold;
+            font-stretch: normal;
+            font-style: normal;
+            line-height: normal;
+            letter-spacing: normal;
+            text-align: center;
+            color: #ffffff;
+        }
+
+        p span {
+            display: block;
+        }
+
+        p span {
+            display: block;
+        }
+
+        .responsive {
+            width: 100%;
+            max-width: 30px;
+            height: auto;
+        }
+    </style>
+</head>
+
+<body id=3D"body"
+    style=3D"margin: 0 !important; padding: 0 !important;font-family: robot=
+o,helvetica neue,helvetica,arial,sans-serif;">
+    <div>
+        <table style=3D"margin: 0 auto;" border=3D"0" cellpadding=3D"0" cel=
+lspacing=3D"0" role=3D"presentation" width=3D"100%">
+            <tr>
+                <td>
+                    <table class=3D"mobile"
+                        style=3D"background-color: #ffffff; color: #000000;=
+ font-family: roboto,helvetica neue,helvetica,arial,sans-serif ; font-size:=
+ 18px; line-height: 36px; margin: 0 auto; padding: 0;"
+                        border=3D"0" cellpadding=3D"0" cellspacing=3D"0" ro=
+le=3D"presentation" width=3D"600">
+                        <!-- Header -->
+                        <!--- <tr>
+                     <td style=3D"padding-top:10px;color: #ffffff; backgrou=
+nd: #d84e55;background-image: url(https://s3.rdbuz.com/Images/eTicket/bg-gr=
+aphics@2x.png);"
+                        bgcolor=3D"#d84e55">
+                        <table
+                           style=3D"padding-top:10px;align-items: center; b=
+ackground-image: url(  https://st.redbus.in/PrejourneyMailer/Images/bg-grap=
+hics@3x.png);background-repeat: no-repeat;background-size:417px; background=
+-position:top;height:75px;">
+                           <tr>
+                              <td style=3D"width: 1%;">
+                                 <img src=3D"https://st.redbus.in/Prejourne=
+yMailer/Images/group-17@3x.png"
+                                    style=3D"max-height:42px;width:60px;pad=
+ding:0px 0px 0px 45px;float:left; margin: 0px 15px 15px 0px;" />
+                              </td>
+                              <td
+                                 style=3D"width: 99%;width:255px;height:6px=
+;font-family:roboto,helvetica neue,helvetica,arial,sans-serif; font-size: 1=
+9px; font-weight: bold; font-stretch: normal; font-style: normal; line-heig=
+ht: normal; letter-spacing: normal; text-align: center; color: #ffffff;line=
+-height:1.9;padding-right:95px;">
+                                 redBus Ticket Information<br>
+                                  Chennai-Bangalore
+                              </td>
+                             =20
+                           </tr>
+                         =20
+                        </table>
+                        <div style=3D"padding: 14px;background-color: #d84e=
+55;color: white;">
+                           <hr
+                              style=3D" display: block;margin-top: 0.1em;ma=
+rgin-bottom: 0.2em;margin-left:auto;margin-right: auto;border-style: inset;=
+border-width: 1px;width:102%" />
+                           <center style=3D"height:25px;">
+                              <span
+                                 style=3D"  width: 336px; height: 15px; fon=
+t-family:roboto,helvetica neue,helvetica,arial,sans-serif; font-size: 12px;=
+ font-weight: normal; font-stretch: normal; font-style: normal; line-height=
+: normal; letter-spacing: normal; color: #ffffff;white-space:nowrap;display=
+: inline-block;padding-right:24px;">Ticket
+                                 Number: <b>TTDB81841838</b> &nbsp;&nbsp;|&=
+nbsp;&nbsp;
+                                 PNR&nbsp;No:&nbsp;<b>7094772</b></span>
+                           </center>
+                        </div>
+                     </td>
+                  </tr>
+               </table>
+            </td>
+         </tr>----->
+
+
+
+
+
+
+
+                        <tr>
+                            <td style=3D"padding-top: 16px;">
+                                <table class=3D"ticketDetails" border=3D"0"=
+ cellpadding=3D"0" cellspacing=3D"0"
+                                    role=3D"presentation" width=3D"600"
+                                    style=3D"margin: 0 auto; border: solid =
+1px #dddddd;background: #d84e55;">
+                                    <tr>
+                                        <td style=3D"width:100%;padding-top=
+: 10px;padding-bottom: 10px;">
+
+
+                                            <table>
+                                                <tr>
+                                                    <td>
+                                                        <img src=3D"https:/=
+/st.redbus.in/PrejourneyMailer/Images/group-17@3x.png"
+                                                            style=3D"max-he=
+ight:42px;width:60px;padding:0px 0px 0px 45px;float:left; margin: 0px 15px =
+15px 0px;" />
+                                                    </td>
+
+
+                                                    <td
+                                                        style=3D"width: 99%=
+;width: 305px;height: 23px;font-family:  roboto,helvetica neue,helvetica,ar=
+ial,sans-serif; font-size: 19px; font-weight: bold; font-stretch: normal; f=
+ont-style: normal; line-height:1.7; letter-spacing: normal; text-align: cen=
+ter; color: #ffffff;padding-left:14px;background-image: url(  https://st.re=
+dbus.in/PrejourneyMailer/Images/bg-graphics@3x.png);background-repeat: no-r=
+epeat;background-size:417px;background-position:top;">
+                                                        redBus Ticket Infor=
+mation<br>
+
+                                                        <div
+                                                            style=3D"font-f=
+amily:  roboto,helvetica neue,helvetica,arial,sans-serif;font-size:14px; fo=
+nt-weight: bold; font-stretch: normal; font-style: normal;">
+                                                            Chennai-Bangalo=
+re on Monday, December 16, 2024</div>
+                                                    </td>
+
+
+
+
+
+
+
+
+
+
+
+
+                                                <tr>
+                                            </table>
+
+
+
+
+
+
+
+
+
+
+                                            <div style=3D"height: 0.1px;pad=
+ding-left: 5px;font-family:  roboto,helvetica neue,helvetica,arial,sans-ser=
+if;opacity: 0.18;
+  border: solid 1px #ffffff;">
+                                            </div>
+
+
+
+                                            <table>
+                                                <tr>
+
+
+                                                    <td
+                                                        style=3D"width: 99%=
+;width: 305px;height: 23px;font-family:  roboto,helvetica neue,helvetica,ar=
+ial,sans-serif; font-size: 19px; font-weight: bold; font-stretch: normal; f=
+ont-style: normal; line-height:1.7; letter-spacing: normal; text-align: cen=
+ter; color: #ffffff;padding-left:116px;">
+                                                        <span
+                                                            style=3D"  widt=
+h:336px;font-family:  roboto,helvetica neue,helvetica,arial,sans-serif; fon=
+t-size: 12px; font-weight: normal; font-stretch: normal; font-style: normal=
+; line-height: normal; letter-spacing: normal; color: #ffffff;white-space:n=
+owrap;display: inline-block;">Ticket
+                                                            Number: <b>TTDB=
+81841838</b> &nbsp;&nbsp;|&nbsp;&nbsp;
+                                                            PNR&nbsp;No:&nb=
+sp;<b>7094772</b></span>
+
+                                                    </td>
+                                                <tr>
+                                            </table>
+
+
+
+
+
+
+                                        </td>
+                                    </tr>
+
+                                </table>
+
+
+                            </td>
+                        </tr>
+
+
+                        <!-------discountsection------>
+                        <tr>
+                            <td style=3D"padding-top: 16px;">
+                                <table class=3D"ticketDetails" border=3D"0"=
+ cellpadding=3D"0" cellspacing=3D"0"
+                                    role=3D"presentation" width=3D"580"
+                                    style=3D"margin: 0 auto; border-radius:=
+7px 7px 7px 7px; border: solid 0px #dddddd;">
+                                    <tbody>
+                                        <tr>
+                                            <td>
+                                                <div
+                                                    style=3D"font-size: 16p=
+x; font-weight: normal; font-stretch: normal; font-style: normal; line-heig=
+ht: 0.9; letter-spacing: normal; color:#47475d;padding-left:8px;padding-bot=
+tom:10px;font-family:  roboto,helvetica neue,helvetica,arial,sans-serif;">
+                                                    <span style=3D"font-wei=
+ght:normal; font-family:  roboto,helvetica neue,helvetica,arial,sans-serif;
+  font-size: 14px;
+  font-weight: normal;
+  font-stretch: normal;
+font-style:Sans-serif;  line-height: normal;
+  letter-spacing: normal;
+  color: #47475d;">Hey Fabian Ferno,
+                                                    </span>
+                                                </div>
+                                                <div style=3D"margin-top:16=
+px;font-family:  roboto,helvetica neue,helvetica,arial,sans-serif;
+  font-size: 16px;
+  font-weight: bold;
+  font-stretch: normal;
+font-style:Sans-serif;  line-height: 1.25;
+  letter-spacing: normal;
+  color: #38b87c;padding-left:8px;padding-bottom:10px;">
+                                                    Hurray!! You have saved=
+ Rs 29.20 on this booking</div>=20
+                                            </td>
+                                            <td style=3D"width:10%;padding-=
+bottom:30px;">
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div style=3D"width: 600px; margin: 5px;">
+                                    <img src=3D"https://st.redbus.in/Images=
+/ind/savepaperlogo.jpg">
+                                </div>
+                            </td>
+                        </tr>
+                        <!---------wallet---->
+                        <tr>
+                            <td style=3D"padding-bottom:25px;">
+                                <table class=3D"ticketDetails" border=3D"0"=
+ cellpadding=3D"0" cellspacing=3D"0"
+                                    role=3D"presentation" width=3D"580"
+                                    style=3D"margin: 0 auto; border-radius:=
+7px 7px 7px 7px; border: solid 0px #dddddd;">
+                                    <tbody>
+                                        <tr>
+                                            <td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </td>
+                        </tr>
+
+
+    <!--------journeydetails---->
+    <tr>
+        <td style=3D"padding-top: 0px;">
+            <table class=3D"ticketDetails" border=3D"0" cellpadding=3D"0" c=
+ellspacing=3D"0" role=3D"presentation" width=3D"580"
+                style=3D"margin: 0 auto; border: solid 1px #dddddd;border-r=
+adius:7px 7px 0px 0px;">
+                <tr>
+                    <td>
+                        <div
+                            style=3D"background-color: #e5ebf8; font-size: =
+16px; padding: 8px 24px;font-weight: bold; font-stretch: normal; font-style=
+: normal; line-height: 1.43; letter-spacing: normal; color: #3e3e52;font-fa=
+mily: roboto,helvetica neue,helvetica,arial,sans-serif;">
+                            Ticket Details
+                        </div>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>
+                        <table border=3D"0" cellpadding=3D"0" cellspacing=
+=3D"0" role=3D"presentation" width=3D"100%">
+                            <tr>
+                                <td style=3D"width:60%;padding-right: 10px;=
+">
+                                    <table>
+                                        <tr>
+                                            <td style=3D"padding-top:8px;wi=
+dth:53%;">
+                                                <div
+                                                    style=3D"font-size: 16p=
+x; font-weight: normal; font-stretch: normal; font-style: normal; line-heig=
+ht: 1.25; letter-spacing: normal; color: #3e3e52;font-weight: bold;padding-=
+left:24px;font-family:  roboto,helvetica neue,helvetica,arial,sans-serif;">
+                                                    <span
+                                                        style=3D"font-size:=
+ 12px; font-weight: normal; font-stretch: normal; font-style: normal; line-=
+height: 2.2; letter-spacing: normal; color: #747f8d; margin:0; white-space:=
+ nowrap;overflow-x: auto;overflow-y: hidden;font-family: roboto,helvetica n=
+eue,helvetica,arial,sans-serif;">Journey
+                                                        Date and Time</span=
+>
+                                                </div>
+                                                <div
+                                                    style=3D"font-size: 16p=
+x; font-weight: normal; font-stretch: normal; font-style: normal; line-heig=
+ht: 1.25; letter-spacing: normal; color: #3e3e52;font-weight: bold;padding-=
+left:22px;">
+                                                    <img style=3D'height: 2=
+4px; width: 24px; margin-right: 4px;float: left;'
+                                                        src=3D"https://s3.r=
+dbuz.com/Images/eTicket/icons/calendar@3x.png" /><span
+                                                        style=3D"font-size:=
+ 14px; font-weight: normal; font-stretch: normal; font-style: normal; line-=
+height: 1.25; letter-spacing: normal; color: #3e3e52;font-weight: bold;font=
+-family: roboto,helvetica neue,helvetica,arial,sans-serif;">16/12/2024, 05:=
+00 AM</span>
+                                                </div>
+
+
+
+
+=20
+
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>
+                        <div
+                            style=3D"border:0.3px dashed #7e7e8c; margin: 1=
+3px 0px 0px 24px; width: 90%;vertical-align:bottom;">
+                        </div>
+                        <table border=3D"0" cellpadding=3D"0" cellspacing=
+=3D"0" role=3D"presentation" width=3D"100%">
+                            <tr>
+                                <td>
+                                    <table class=3D"small-screen" align=3D"=
+left" border=3D"0" cellpadding=3D"0" cellspacing=3D"0"
+                                        role=3D"presentation" width=3D"48%"=
+>
+                                        <tr>
+                                            <td>
+                                                <p
+                                                    style=3D"font-size: 12p=
+x; font-weight: normal; font-stretch: normal; font-style: normal; line-heig=
+ht: 1.33; letter-spacing: normal; color: #747f8d; margin:0; padding: 17px 2=
+4px 0px;font-family: roboto,helvetica neue,helvetica,arial,sans-serif;">
+                                                    Travels</p>
+                                                <table style=3D"margin: 0 a=
+uto;" border=3D"0" cellpadding=3D"0"
+                                                    cellspacing=3D"0" role=
+=3D"presentation" width=3D"100%">
+                                                    <tr>
+                                                        <td>
+                                                            <table align=3D=
+"left" border=3D"0" cellpadding=3D"0"
+                                                                cellspacing=
+=3D"0" role=3D"presentation" width=3D"5%">
+                                                                <tr>
+                                                                    <td><im=
+g style=3D"max-width: 100%; min-width: 24px; width: 0%; margin: 4px 0px 0px=
+ 24px;"
+                                                                           =
+ src=3D"https://s3.rdbuz.com/Images/eTicket/icons/travel@3x.png" />
+                                                                    </td>
+                                                                </tr>
+                                                            </table>
+                                                            <table align=3D=
+"left" border=3D"0" cellpadding=3D"0"
+                                                                cellspacing=
+=3D"0" role=3D"presentation" width=3D"80%">
+                                                                <tr>
+                                                                    <td sty=
+le=3D"padding-top: 5px; padding-left: 7px;">
+                                                                        <di=
+v
+                                                                           =
+ style=3D"margin-top: 2px; font-size: 14px; font-weight: bold; font-stretch=
+: normal; font-style: normal; line-height: 1.43; letter-spacing: normal; co=
+lor: #47475d;font-family: roboto,helvetica neue,helvetica,arial,sans-serif;=
+">
+                                                                           =
+ NueGo </div>
+                                                                        <di=
+v
+                                                                           =
+ style=3D"font-size: 12px; font-weight: normal; font-stretch: normal; font-=
+style: normal; line-height: 1.33; letter-spacing: normal; color: #747f8d;fo=
+nt-family: roboto,helvetica neue,helvetica,arial,sans-serif;">
+                                                                           =
+ Electric A/C Seater/Sleeper (2+1)</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                                                                        <di=
+v
+                                                                           =
+ style=3D"margin-top: 2px; font-size: 14px; font-weight: bold; font-stretch=
+: normal; font-style: normal; line-height: 1.7; letter-spacing: normal; col=
+or: #1034d9;font-family: roboto,helvetica neue,helvetica,arial,sans-serif;"=
+>
+                                                                           =
+ <a href=3D"tel:18002679001"
+                                                                           =
+     style=3D"text-decoration:none;color:#1034d9;">
+                                                                           =
+     18002679001</a>
+                                                                           =
+=20
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                                                                    </td>
+                                                                </tr>
+                                                            </table>
+                                                        </td>
+                                                    </tr>
+                                                </table>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                    <table class=3D"small-screen" align=3D"=
+right" border=3D"0" cellpadding=3D"0" cellspacing=3D"0"
+                                        role=3D"presentation" width=3D"45%"=
+>
+                                        <tr>
+                                            <td>
+                                                <p
+                                                    style=3D"font-size:12px=
+; font-weight: normal; font-stretch: normal; font-style: normal; line-heigh=
+t: 1.33; letter-spacing: normal; color: #747f8d; margin:0; padding: 17px 24=
+px 0px;font-family: roboto,helvetica neue,helvetica,arial,sans-serif;">
+                                                    Ticket Price</p>
+                                                <table style=3D"margin: 0 a=
+uto;" border=3D"0" cellpadding=3D"0"
+                                                    cellspacing=3D"0" role=
+=3D"presentation" width=3D"100%">
+                                                    <tr>
+                                                        <td>
+                                                            <table align=3D=
+"left" border=3D"0" cellpadding=3D"0"
+                                                                cellspacing=
+=3D"0" role=3D"presentation" width=3D"5%">
+                                                                <tr>
+                                                                    <td><im=
+g style=3D"max-width: 100%; min-width: 24px; width: 0%; margin: 4px 0px 0px=
+ 24px;"
+                                                                           =
+ src=3D"https://st.redbus.in/Images/Eticket/Icons/payment-wallet.png" />
+                                                                    </td>
+                                                                </tr>
+                                                            </table>
+                                                            <table align=3D=
+"left" border=3D"0" cellpadding=3D"0"
+                                                                cellspacing=
+=3D"0" role=3D"presentation" width=3D"80%">
+                                                                <tr>
+                                                                    <td sty=
+le=3D"padding-top: 5px; padding-left: 7px;">
+                                                                        <di=
+v
+                                                                           =
+ style=3D"margin-top: 2px; font-size: 14px; font-weight: bold; font-stretch=
+: normal; font-style: normal; line-height: 1.43; letter-spacing: normal; co=
+lor: #47475d;font-family:  roboto,helvetica neue,helvetica,arial,sans-serif=
+;">
+                                                                           =
+ Rs. 654.0</div>
+                                                                        <di=
+v
+                                                                           =
+ style=3D"font-size: 12px; font-weight: normal; font-stretch: normal; font-=
+style: normal; line-height: 1.33; letter-spacing: normal; color: #747f8d;fo=
+nt-family: roboto,helvetica neue,helvetica,arial,sans-serif">
+                                                                           =
+ (inclusive of GST) <br>
+                                                                        </d=
+iv>
+                                                                    </td>
+                                                                </tr>
+                                                            </table>
+                                                        </td>
+                                                    </tr>
+                                                </table>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>
+                        </table>
+                        <!----boardingpoint---->
+                        <div
+                            style=3D"border:0.3px dashed #7e7e8c; margin: 1=
+3px 0px 0px 24px; width: 90%;vertical-align:bottom;">
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <table border=3D"0" cellpadding=3D"0" cellspacing=
+=3D"0" role=3D"presentation" width=3D"100%">
+                            <tr>
+                                <td>
+                                    <table class=3D"small-screen" align=3D"=
+left" border=3D"0" cellpadding=3D"0" cellspacing=3D"0"
+                                        role=3D"presentation" width=3D"48%"=
+>
+                                        <tr>
+                                            <td>
+                                                <p
+                                                    style=3D"font-size: 12p=
+x; font-weight: normal; font-stretch: normal; font-style: normal; line-heig=
+ht: 1.33; letter-spacing: normal; color: #747f8d; margin:0; padding: 17px 2=
+4px 0px;font-family: roboto,helvetica neue,helvetica,arial,sans-serif">
+                                                    Boarding Point</p>
+                                                <table style=3D"margin: 0 a=
+uto;" border=3D"0" cellpadding=3D"0"
+                                                    cellspacing=3D"0" role=
+=3D"presentation" width=3D"100%">
+                                                    <tr>
+                                                        <td>
+                                                            <table align=3D=
+"left" border=3D"0" cellpadding=3D"0"
+                                                                cellspacing=
+=3D"0" role=3D"presentation" width=3D"5%">
+                                                                <tr>
+                                                                    <td><im=
+g style=3D"max-width: 100%; min-width: 24px; width: 0%; margin: 4px 0px 0px=
+ 24px;"
+                                                                           =
+ src=3D"https://s3.rdbuz.com/Images/eTicket/icons/location@3x.png" />
+                                                                    </td>
+                                                                </tr>
+                                                            </table>
+                                                            <table align=3D=
+"left" border=3D"0" cellpadding=3D"0"
+                                                                cellspacing=
+=3D"0" role=3D"presentation" width=3D"80%">
+                                                                <tr>
+                                                                    <td sty=
+le=3D"padding-top: 5px; padding-left: 7px;">
+                                                                        <di=
+v
+                                                                           =
+ style=3D"margin-top: 2px; font-size: 14px; font-weight: bold; font-stretch=
+: normal; font-style: normal; line-height: 1.73; letter-spacing: normal; co=
+lor: #47475d;font-family: roboto,helvetica neue,helvetica,arial,sans-serif"=
+>
+                                                                           =
+ Chennai </div>
+
+                                                                        <di=
+v
+                                                                           =
+ style=3D"font-size: 12px; font-weight: normal; font-stretch: normal; font-=
+style: normal; line-height: 1.33; letter-spacing: normal; color: #747f8d;fo=
+nt-family: roboto,helvetica neue,helvetica,arial,sans-serif">
+                                                                           =
+ NueGo Office, Koyambedu</div>
+
+                                                                        <di=
+v
+                                                                           =
+ style=3D"font-size: 12px; font-weight: normal; font-stretch: normal; font-=
+style: normal; line-height: 1.33; letter-spacing: normal; color: #747f8d;fo=
+nt-family: roboto,helvetica neue,helvetica,arial,sans-serif">
+                                                                           =
+ Near Canara Bank, Shop No.5/1, Kaliamman Koil Street  </div>
+
+
+
+
+
+
+
+
+                                                                        <di=
+v
+                                                                           =
+ style=3D"font-size: 12px; font-weight: normal; font-stretch: normal; font-=
+style: normal; line-height: 1.33; letter-spacing: normal; color: #747f8d;fo=
+nt-family: roboto,helvetica neue,helvetica,arial,sans-serif;padding-top:4px=
+;">
+                                                                           =
+ Landmark: Hanish Travels</div>
+                                                                        <di=
+v
+                                                                           =
+ style=3D"margin-top: 2px; font-size: 14px; font-weight: bold; font-stretch=
+: normal; font-style: normal; line-height: 1.7; letter-spacing: normal; col=
+or: #1034d9;font-family: roboto,helvetica neue,helvetica,arial,sans-serif;"=
+>
+                                                                           =
+ <a href=3D"tel:18002679001"
+                                                                           =
+     style=3D"text-decoration:none;color:#1034d9;font-family:  roboto,helve=
+tica neue,helvetica,arial,sans-serif;">
+                                                                           =
+     18002679001</a><br>
+                                                                        </d=
+iv>
+                                                                       =20
+                                                                        <di=
+v
+                                                                           =
+ style=3D"margin-top: 2px; font-size: 14px; font-weight: bold; font-stretch=
+: normal; font-style: normal; line-height: 1.7; letter-spacing: normal; col=
+or: #1034d9;font-family: roboto,helvetica neue,helvetica,arial,sans-serif;"=
+>
+                                                                           =
+ <a href=3D"tel:18002679001"
+                                                                           =
+     style=3D"text-decoration:none;color:#1034d9;font-family:  roboto,helve=
+tica neue,helvetica,arial,sans-serif;">
+                                                                           =
+     18002679001</a><br>
+                                                                        </d=
+iv>
+                                                                    </td>
+                                                                </tr>
+                                                            </table>
+                                                        </td>
+                                                    </tr>
+                                                </table>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                    <table class=3D"small-screen" align=3D"=
+right" border=3D"0" cellpadding=3D"0" cellspacing=3D"0"
+                                        role=3D"presentation" width=3D"48%"=
+>
+                                        <tr>
+                                            <td>
+                                                <p
+                                                    style=3D"font-size: 12p=
+x; font-weight: normal; font-stretch: normal; font-style: normal; line-heig=
+ht: 1.33; letter-spacing: normal; color: #747f8d; margin:0; padding: 17px 2=
+4px 0px;font-family: roboto,helvetica neue,helvetica,arial,sans-serif;">
+                                                    Dropping Point</p>
+                                                <table style=3D"margin: 0 a=
+uto;" border=3D"0" cellpadding=3D"0"
+                                                    cellspacing=3D"0" role=
+=3D"presentation" width=3D"100%">
+                                                    <tr>
+                                                        <td>
+                                                            <table align=3D=
+"left" border=3D"0" cellpadding=3D"0"
+                                                                cellspacing=
+=3D"0" role=3D"presentation" width=3D"5%">
+                                                                <tr>
+                                                                    <td><im=
+g style=3D"max-width: 100%; min-width: 24px; width: 0%; margin: 4px 0px 0px=
+ 24px;"
+                                                                           =
+ src=3D"https://s3.rdbuz.com/Images/eTicket/icons/location@3x.png" />
+                                                                    </td>
+                                                                </tr>
+                                                            </table>
+                                                            <table align=3D=
+"left" border=3D"0" cellpadding=3D"0"
+                                                                cellspacing=
+=3D"0" role=3D"presentation" width=3D"80%">
+                                                                <tr>
+                                                                    <td sty=
+le=3D"padding-top: 5px; padding-left: 7px;">
+                                                                        <di=
+v
+                                                                           =
+ style=3D"margin-top: 2px; font-size: 14px; font-weight: bold; font-stretch=
+: normal; font-style: normal; line-height: 1.73; letter-spacing: normal; co=
+lor: #47475d;font-family: roboto,helvetica neue,helvetica,arial,sans-serif;=
+">
+                                                                           =
+ Bangalore</div>
+                                                                        <di=
+v
+                                                                           =
+ style=3D"font-size: 12px; font-weight: normal; font-stretch: normal; font-=
+style: normal; line-height: 1.33; letter-spacing: normal; color: #747f8d;fo=
+nt-family: roboto,helvetica neue,helvetica,arial,sans-serif;">
+                                                                           =
+ Madiwala (Bus Stand)</div>
+                                                                        <di=
+v
+                                                                           =
+ style=3D"font-size: 12px; font-weight: normal; font-stretch: normal; font-=
+style: normal; line-height: 1.33; letter-spacing: normal; color: #747f8d;fo=
+nt-family: roboto,helvetica neue,helvetica,arial,sans-serif;padding-top:4px=
+;">
+                                                                           =
+ DROPPING DATE & TIME:<br> <strong
+                                                                           =
+     style=3D"color:#47475d;font-family:  roboto,helvetica neue,helvetica,a=
+rial,sans-serif;">16/12/2024, 11:35 AM</strong>
+                                                                        </d=
+iv>
+                                                                    </td>
+                                                                </tr>
+                                                            </table>
+                                                        </td>
+                                                    </tr>
+                                                </table>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>
+                        </table>
+
+
+
+
+
+
+
+
+
+
+
+                        <div style=3D"border: 0.3px dashed #7e7e8c; margin:=
+ 13px 0px 0px 24px; width: 90%;"></div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                        <!----pasengerdetails----->
+                        <table align=3D"left" border=3D"0" cellpadding=3D"0=
+" cellspacing=3D"0" role=3D"presentation" width=3D"90%">
+                            <tr>
+                                <td>
+                                    <p
+                                        style=3D"font-size: 12px; font-weig=
+ht: normal; font-stretch: normal; font-style: normal; line-height: 2.2; let=
+ter-spacing: normal; color: #747f8d; margin:0; padding: 17px 24px 0px; whit=
+e-space: nowrap;overflow-x: auto;overflow-y: hidden;font-family: roboto,hel=
+vetica neue,helvetica,arial,sans-serif;">
+                                        Passenger Details</p>
+                                </td>
+                                <td style=3D"padding-right:36px;">
+                                    <p
+                                        style=3D"font-size: 12px; font-weig=
+ht: normal; font-stretch: normal; font-style: normal; line-height: 1.33; le=
+tter-spacing: normal; color: #747f8d; margin:0; padding: 17px 24px 0px;padd=
+ing-right:2px;font-family: roboto,helvetica neue,helvetica,arial,sans-serif=
+;white-space: nowrap;overflow-x: auto;overflow-y:hidden;">
+                                        Seat no</p>
+                                </td>
+                            </tr>=20
+                            <tr>
+                                <td style=3D"padding-left:25px;" align=3Dle=
+ft>
+                                    <img style=3D'height: 24px; width: 24px=
+; margin-right: 4px;float: left;'
+                                        src=3D'https://s3.rdbuz.com/Images/=
+eTicket/icons/male@3x.png' />
+                                   =20
+                                    <h4 style=3D"margin-top: 2px; font-size=
+: 14px; font-weight: bold; font-stretch: normal; font-style: normal; line-h=
+eight: 1.73; letter-spacing: normal; color: #47475d;font-family: roboto,hel=
+vetica neue,helvetica,arial,sans-serif;"
+                                        class=3D'liketext'> Fabian Ferno
+                                        <div
+                                            style=3D"font-size: 12px; font-=
+weight: normal; font-stretch: normal; font-style: normal; line-height: 1.0;=
+ letter-spacing: normal; color: #747f8d;padding-left:29px;font-family: robo=
+to,helvetica neue,helvetica,arial,sans-serif;">
+                                            23Yrs, MALE</div>
+                                    </h4>
+                                    </th>
+                                <td style=3D"vertical-align:top;padding-lef=
+t:1px;">
+                                    <p
+                                        style=3D" font-size: 16px; font-wei=
+ght:normal; font-stretch: normal; font-style: normal; line-height:0.1; lett=
+er-spacing: normal; margin:0; padding:11px 24px 0px;padding-right:2px;font-=
+family: roboto,helvetica neue,helvetica,arial,sans-serif; white-space: nowr=
+ap;color: #d5585d;">
+                                        15</p>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>
+                                    <div
+                                        style=3D"font-size: 12px; font-weig=
+ht: normal; font-stretch: normal; font-style: normal; line-height: 1.0; let=
+ter-spacing: normal; color: #747f8d;font-family:  roboto,helvetica neue,hel=
+vetica,arial,sans-serif;">
+                                    </div>
+                                </th>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+    <tr>
+        <!-- /tripoffer -->
+        <table style=3D"width: 600px; margin-top: 10px;">
+            <tr>
+                <td>
+                    <div style=3D"
+                            width: 550px;
+                            background-color: #f2f2f8;
+                            height: fit-content;
+                            padding: 24px;
+                            border-radius: 14px;
+                            font-family: 'Inter', sans-serif;
+                            font-size: 14px;
+                           =20
+                            gap: 25px;
+                            ">
+                        <div style=3D"align-items: self-start;">
+                            <img style=3D"width:100px; height: 40px;" src=
+=3D"https://st.redbus.in/btt/streaks/logo.png" />
+                        </div>
+
+                        <div style=3D"align-items: self-start; padding-left=
+: 10px">
+                            <p style=3D"font-size: 14px;">Unlock your chanc=
+e to win a <b>Free Ticket</b> with on
+                                Chennai =E2=87=84 Bangalore
+                            </p>
+                            <p style=3D"font-size: 12px; color: grey">Go to=
+ homepage and unlock routePass before
+                                16/12/2024, 05:00 AM</p>
+                        </div>
+
+                    </div>
+                </td>
+            </tr>
+        </table>
+    </tr>
+   =20
+    <!-----RTOoffer----------->=20
+    <tr>
+        <td style=3D"padding-top:0px;"><br>
+            <table class=3D"ticketDetails" border=3D"0" cellpadding=3D"0" c=
+ellspacing=3D"0" role=3D"presentation" width=3D"580"
+                style=3D"margin: 0 auto; border: solid 1px #dddddd;border-r=
+adius:7px 7px 0px 0px;">
+                <tr>
+                    <td>
+                        <table border=3D"0" cellpadding=3D"0" cellspacing=
+=3D"0" role=3D"presentation" width=3D"100%"
+                            style=3D"background-color: #d6f0e4;">
+                            <tr>
+                                <td>
+                                    <table align=3D"left" border=3D"0" cell=
+padding=3D"0" cellspacing=3D"0" role=3D"presentation"
+                                        width=3D"6%">
+                                        <tr>
+                                            <td style=3D"padding:9px 0px 6p=
+x 16px;">
+                                                <img src=3D"https://s3.rdbu=
+z.com/Images/eTicket/return-trip-icon@3x.png"
+                                                    alt=3D"" width=3D"24" h=
+eight=3D"24">
+                                            </td>
+                                        </tr>
+                                    </table>
+                                    <table align=3D"left" border=3D"0" cell=
+padding=3D"0" cellspacing=3D"0" role=3D"presentation"
+                                        width=3D"85%">
+                                        <tr>
+                                            <td style=3D"padding-top: 15px;=
+ padding-left: 15px;">
+                                                <div style=3D" font-family:=
+ roboto,helvetica neue,helvetica,arial,sans-serif;
+  font-size: 14px;
+  font-weight: normal;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: normal;
+  letter-spacing: normal;
+  color: #3e3e52;">
+                                                    You have unlocked a <st=
+rong style=3D" font-family: roboto,helvetica neue,helvetica,arial,sans-seri=
+f;
+  font-size: 14px;
+  font-weight:bold;
+  font-stretch:normal;
+  font-style:normal;
+  line-height:normal;
+  letter-spacing:normal;
+  color: #3e3e52;">Return Trip Offer</strong></div>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <div style=3D"margin:25px 25px;font-family: roboto,=
+helvetica neue,helvetica,arial,sans-serif;
+  font-size: 18px;
+  font-weight: bold;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: 1.11;
+  letter-spacing: normal;
+  color: #47475d;">
+                            Flat 10% off on return trip.</div>
+ <table border=3D"0" cellpadding=3D"0" cellspacing=3D"0" role=3D"presentati=
+on"
+                            width=3D"100%">
+                            <tr>
+                                <td style=3D"padding:0px 25px 25px">
+                                    <table align=3D"left" border=3D"0" cell=
+padding=3D"0" cellspacing=3D"0" role=3D"presentation"
+                                        width=3D"5%">
+                                        <tr>
+                                            <td>
+                                                <img style=3D"max-width: 10=
+0%; min-width: 24px; width: 0%; margin-right:7px;"
+                                                    src=3D"https://s3.rdbuz=
+.com/Images/eTicket/icons/location@3x.png" />
+                                            </td>
+                                        </tr>
+                                    </table>
+                                    <table align=3D"left" border=3D"0" cell=
+padding=3D"0" cellspacing=3D"0" role=3D"presentation">
+                                        <tr>
+                                            <td style=3D"padding-top: 2px;"=
+>
+                                                <div style=3D"font-family: =
+roboto,helvetica neue,helvetica,arial,sans-serif;
+  font-size: 16px;
+  font-weight: 600;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: 1.25;
+  letter-spacing: 0.3px;
+  color: #3e3e52;">
+                                                    Bangalore
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                    <table align=3D"left" border=3D"0" cell=
+padding=3D"0" cellspacing=3D"0" role=3D"presentation"
+                                        width=3D"5%">
+                                        <tr>
+                                            <td>
+                                                <img style=3D"max-width: 10=
+0%; min-width: 24px; width: 0%; margin-right:7px; margin-left:7px;"
+                                                    src=3D"https://s3.rdbuz=
+.com/Images/eTicket/icons/ic-arrow@3x.png" />
+                                            </td>
+                                        </tr>
+                                    </table>
+                                    <table align=3D"left" border=3D"0" cell=
+padding=3D"0" cellspacing=3D"0" role=3D"presentation">
+                                        <tr>
+                                            <td style=3D"padding-top: 2px;"=
+>
+                                                <div style=3D"font-family: =
+roboto,helvetica neue,helvetica,arial,sans-serif;
+  font-size: 16px;
+  font-weight: 600;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: 1.25;
+  letter-spacing: 0.3px;
+  color: #3e3e52;">
+                                                    Chennai</div>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>
+                        </table>
+                        <table align=3D"left" border=3D"0" cellpadding=3D"0=
+" cellspacing=3D"0" role=3D"presentation" width=3D"100%">
+                            <tr>
+                                <td style=3D"padding:0px 25px 25px">
+                                    <table align=3D"left" border=3D"0" cell=
+padding=3D"0" cellspacing=3D"0" role=3D"presentation"
+                                        width=3D"5%">
+                                        <tr>
+                                            <td>
+                                                <img style=3D"max-width: 10=
+0%; min-width: 24px; width: 0%; margin-right:7px;"
+                                                    src=3D"https://s3.rdbuz=
+.com/Images/eTicket/icons/travel@3x.png" />
+                                            </td>
+                                        </tr>
+                                    </table>
+                                    <table align=3D"left" border=3D"0" cell=
+padding=3D"0" cellspacing=3D"0" role=3D"presentation"
+                                        width=3D"85%">
+                                        <tr>
+                                            <td style=3D"padding-top: 2px;"=
+>
+                                                <div style=3D"font-family: =
+roboto,helvetica neue,helvetica,arial,sans-serif;
+  font-size: 16px;
+  font-weight: 600;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: 1.25;
+  letter-spacing: 0.3px;
+  color: #3e3e52;">
+                                                    NueGo
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>
+                        </table>
+                        <table align=3D"left" border=3D"0" cellpadding=3D"0=
+" cellspacing=3D"0" role=3D"presentation" width=3D"100%">
+                            <tr>
+                                <td style=3D"padding:0px 25px 25px">
+                                    <table align=3D"left" border=3D"0" cell=
+padding=3D"0" cellspacing=3D"0" role=3D"presentation"
+                                        width=3D"5%">
+                                        <tr>
+                                            <td>
+                                                <img style=3D"max-width: 10=
+0%; min-width: 24px; width: 0%; margin-right:7px;"
+                                                    src=3D"https://s3.rdbuz=
+.com/Images/eTicket/icons/calendar@3x.png" />
+                                            </td>
+                                        </tr>
+                                    </table>
+                                    <table align=3D"left" border=3D"0" cell=
+padding=3D"0" cellspacing=3D"0" role=3D"presentation"
+                                        width=3D"85%">
+                                        <tr>
+                                            <td style=3D"padding-top: 2px;"=
+>
+                                                <div style=3D"font-family: =
+roboto,helvetica neue,helvetica,arial,sans-serif;
+  font-size: 14px;
+  font-weight: normal;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: 1.43;
+  letter-spacing: normal;
+  color: #515069;">
+                                                    Book for travel on or b=
+efore <span style=3D"color: #d36366;font-family: roboto,helvetica neue,helv=
+etica,arial,sans-serif;
+  font-size: 14px;
+  font-weight: normal;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: 1.43;
+  letter-spacing: normal;">31-Dec-2024</span></div>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>
+                        </table>
+                        <div style=3D"padding:0px 25px 25px">
+                            <div><a href=3D"https://www.redbus.in/search?fr=
+omCityName=3DBangalore&fromCityId=3D122&toCityName=3DChennai&toCityId=3D123=
+&opId=3D23971&busType=3DAny"
+                                    target=3D"_blank"
+                                    style=3D"background-color:#d84e55;borde=
+r-radius:4px;color:#ffffff;display:inline-block;font-size:13px;font-weight:=
+bold;line-height:40px;text-align:center;text-decoration:none;width:250px;fo=
+nt-family: roboto,helvetica neue,helvetica,arial,sans-serif">
+                                    BOOK NOW WITH THE OFFER</a></div>
+                    </td>
+                </tr>
+                <tr>
+                    <td style=3D"margin:0px 25px 25px;">
+                        <table class=3D"ticketDetails" border=3D"0" cellpad=
+ding=3D"0" cellspacing=3D"0" role=3D"presentation"
+                            width=3D"578.5"
+                            style=3D"margin: 0 auto; border-radius: 4px; bo=
+rder: solid 1px #dddddd;border-left:0px;border-right:0px;border-bottom:0px;=
+">
+                            <tr>
+                                <td style=3D"padding:9px 25px;">
+                                    <div
+                                        style=3D"font-size: 12px; font-weig=
+ht: normal; font-stretch: normal; font-style: normal; line-height: normal; =
+letter-spacing: normal; color: #898997;font-family: roboto,helvetica neue,h=
+elvetica,arial,sans-serif">
+                                        <strong>Validity:</strong> You can =
+get this offer till <span
+                                            style=3D"color: #d5585d;font-fa=
+mily: roboto,helvetica neue,helvetica,arial,sans-serif">31-Dec-2024</span>
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+
+    <!---------primobusoffer------------>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <!-------addonservice---------->
+
+
+
+    <!------insurance----->
+
+
+
+
+    <!--------RAP------->
+
+
+    <tr>
+
+        <td>
+            <div style=3D"padding-top:16px;">
+            </div>
+        </td>
+
+    </tr>
+
+
+
+
+
+
+
+
+
+
+
+
+
+   =20
+
+
+    <!-- Datechange with charges -->
+
+
+    <tr>
+        <td style=3D"padding-top: 0px;">
+            <table class=3D"ticketDetails" border=3D"0" cellpadding=3D"0" c=
+ellspacing=3D"0" role=3D"presentation" width=3D"580"
+                style=3D"margin: 0 auto; border: solid 1px #dddddd;border-r=
+adius:7px 7px 0px 0px;">
+                <tr>
+                    <td>
+                        <div
+                            style=3D"background-color: #e5ebf8; font-size: =
+16px; padding: 8px 24px;font-weight: bold; font-stretch: normal; font-style=
+: normal; line-height: 1.43; letter-spacing: normal; color: #3e3e52;font-fa=
+mily:  roboto,helvetica neue,helvetica,arial,sans-serif;">
+                            Date change
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <!------------>
+                        <div style=3D"font-family:  roboto,helvetica neue,h=
+elvetica,arial,sans-serif;
+  font-size: 14px;
+  font-weight: normal;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: 1.43;
+  letter-spacing: normal;
+  color: #3e3e52;margin-left:24px;padding-top:24px;">
+                            The journey date for this ticket can be changed=
+, you can advance or postpone the ticket to a
+                            different date as per your convenience.</div>
+                        <div style=3D"font-family:  roboto,helvetica neue,h=
+elvetica,arial,sans-serif;
+  font-size: 14px;
+  font-weight: normal;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: 1.93;
+  letter-spacing: normal;
+  color: #3e3e52;margin-left:24px;padding-top:13px;">
+                            Date change time and charges for this operator =
+is shown below.</div>
+                        <div style=3D"display:inline-block;padding-left:15p=
+x;padding-top:9px;">
+                            <table cellspacing=3D"0" align=3D"Left" rules=
+=3D"all" border=3D"1" width=3D"525"
+                                style=3D"padding:0;margin-bottom:7px;margin=
+-left:9px;">
+
+
+                                <tbody>
+                                    <tr align=3D"left">
+                                        <td align=3D"left" scope=3D"col" wi=
+dth=3D"60%" style=3D"border-left:1px solid white;border-top:1px solid white=
+;border-right:1px solid white;font-family: roboto,helvetica neue,helvetica,=
+arial,sans-serif;
+  font-size: 12px;
+  font-weight: bold;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: normal;
+  letter-spacing: normal;
+  color: #47475d;">
+
+                                            <b>Time</b>
+                                            </font>
+                                        </td>
+                                        <td align=3D"left" scope=3D"col" wi=
+dth=3D"29%" style=3D"border-left:1px solid white;border-top:1px solid white=
+;border-right:1px solid white;font-family: roboto,helvetica neue,helvetica,=
+arial,sans-serif;
+  font-size: 12px;
+  font-weight: bold;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: normal;
+  letter-spacing: normal;
+  color: #47475d;">
+
+                                            <b>Charges</b>
+                                            </font>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td style=3D"border:0.5px solid bla=
+ck;border-left:0.5px solid black;height:40px;font-family: roboto,helvetica =
+neue,helvetica,arial,sans-serif;
+  font-size: 12px;
+  font-weight: normal;
+  font-stretch: normal;
+  font-style: normal;
+  line-height:normal;
+  letter-spacing: 0.24px;
+  color: #676582;text-align:justify;padding-left:5px;">
+                                            <div>
+
+
+                                                Date change allowed till <s=
+trong>16 Dec 2024 03:17 AM</strong>
+                                                <br>(1 hours before departu=
+re)
+
+                                            </div>
+
+                                            </font>
+                                        </td>
+                                        <td align=3D"left" style=3D"border:=
+0.5px solid black;background-color: #f8f4f4;height:40px;font-family: roboto=
+,helvetica neue,helvetica,arial,sans-serif;
+  font-size: 12px;
+  font-weight:bold;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: 1.33;
+  letter-spacing: 0.24px;
+  color: #676582;">
+
+                                            <span>&nbsp;</span>
+                                            <span
+                                                style=3D"font-weight:bold;f=
+ont-family: roboto,helvetica neue,helvetica,arial,sans-serif;">
+                                                 FREE=20
+                                            </span>
+                                            </font>
+                                        </td>
+                                    </tr>
+                                </tbody>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                            </table>
+                        </div>
+                <tr>
+                    <td style=3D"padding-top:5px;padding-left:26px;">
+                        <div style=3D"font-size: 14px; line-height: 32px;fo=
+nt-family: roboto,helvetica neue,helvetica,arial,sans-serif;
+  font-size: 14px;
+  font-weight: normal;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: 1.43;
+  letter-spacing: normal;
+  color: #3e3e52;">
+                            <strong
+                                style=3D"color:#d84e55;font-size:14px;font-=
+family: roboto,helvetica neue,helvetica,arial,sans-serif;">Note:</strong>
+                            Rescheduling a ticket can be availed only once =
+per booking, if applicable. Once the travel
+                            date change option is availed, the ticket canno=
+t be further cancelled.
+                        </div>
+                    </td>
+                </tr>
+
+
+
+
+                <tr>
+                    <td style=3D"padding-top:15px;">
+                        <div
+                            style=3D"height: 0.01px;border: solid 0.1px #dd=
+dddd;font-family:  roboto,helvetica neue,helvetica,arial,sans-serif;">
+                        </div>
+
+                    </td>
+                </tr>
+
+
+
+
+
+
+
+                <tr>
+                    <td style=3D"padding-top: 20px;padding-left:26px;">
+                        <div style=3D"font-size: 14px; line-height: 32px;fo=
+nt-family: roboto,helvetica neue,helvetica,arial,sans-serif;
+  font-size: 12px;
+  font-weight: bold;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: normal;
+  letter-spacing: normal;
+  color: #47475d;">
+                            How to Change the journey date of your ticket i=
+n redbus app
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td style=3D"padding-top: 8px;padding-bottom: 15px;padd=
+ing-left:26px;">
+                        <div style=3D"font-family: roboto,helvetica neue,he=
+lvetica,arial,sans-serif;
+  font-size: 14px;
+  font-weight: normal;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: normal;
+  letter-spacing: normal;
+  color: #3e3e52;">
+                            Go to my bookings, choose the journey & change =
+date
+                        </div>
+                    </td>
+                </tr>
+
+        </td>
+    </tr>
+    </table><br>
+    </td>
+    </tr>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <!-- redRail banner -->
+
+
+    <tr>
+
+        <td style=3D"padding-bottom: 22px;">
+
+            <img style=3D'height: 100%; width: 97%; margin-left: 10px;float=
+: left;'
+                src=3D"https://st.redbus.in/Images/rail/RAIL100_redrail1-01=
+_New.jpg" />
+
+
+
+
+        </td>
+
+
+    </tr>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <!-- cancellationpolicy -->
+    <tr>
+        <td style=3D"padding-top: 0px;">
+            <table class=3D"ticketDetails" border=3D"0" cellpadding=3D"0" c=
+ellspacing=3D"0" role=3D"presentation" width=3D"580"
+                style=3D"margin: 0 auto; border: solid 1px #dddddd;border-r=
+adius:7px 7px 0px 0px;">
+                <tr>
+                    <td>
+                        <div
+                            style=3D"background-color: #e5ebf8; font-size: =
+16px; padding: 8px 24px;font-weight: bold; font-stretch: normal; font-style=
+: normal; line-height: 1.43; letter-spacing: normal; color: #3e3e52;font-fa=
+mily: roboto,helvetica neue,helvetica,arial,sans-serif;">
+                            Cancellation policy
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <div style=3D"
+  font-family: roboto,helvetica neue,helvetica,arial,sans-serif;
+  font-size: 14px;
+  font-weight: normal;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: 1.43;
+  letter-spacing: normal;
+  color: #3e3e52;margin-left:24px;padding-top:24px;">
+                            Your current cancellation charges according to =
+the cancellation policy is
+                            highlighted below</div>
+                        <div style=3D"display:inline-block;padding-left:15p=
+x;padding-top:9px;">
+                            <table cellspacing=3D"0" align=3D"Left" rules=
+=3D"all" border=3D"1" width=3D"525"
+                                style=3D"padding:0;margin-bottom:7px;margin=
+-left:11px;">
+                                <tbody>
+                                    <tr align=3D"left">
+                                        <td align=3D"left" scope=3D"col" wi=
+dth=3D"60%" style=3D"border-left:1px solid white;border-top:1px solid white=
+;border-right:1px solid white;font-family: roboto,helvetica neue,helvetica,=
+arial,sans-serif;
+  font-size: 12px;
+  font-weight: bold;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: normal;
+  letter-spacing: normal;
+  color: #47475d;">
+
+                                            <b>Cancellation time</b>
+                                            </font>
+                                        </td>
+                                        <td align=3D"left" scope=3D"col" wi=
+dth=3D"29%" style=3D"border-left:1px solid white;border-top:1px solid white=
+;border-right:1px solid white;font-family: roboto,helvetica neue,helvetica,=
+arial,sans-serif;
+  font-size: 12px;
+  font-weight: bold;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: normal;
+  letter-spacing: normal;
+  color: #47475d;">
+
+                                            <b>Cancellation charges</b>
+                                            </font>
+                                        </td>
+                                    </tr>  <tr>
+                                        <td style=3D"border:0.5px solid bla=
+ck;border-left:0.5px solid black;height:40px;font-family: roboto,helvetica =
+neue,helvetica,arial,sans-serif;
+  font-size: 12px;
+  font-weight: normal;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: 1.33;
+  letter-spacing: 0.24px;
+  color: #676582;">
+
+                                            <span
+                                                style=3D"font-weight:normal=
+;font-family:  roboto,helvetica neue,helvetica,arial,sans-serif;">
+                                                &nbsp; Before 15th Dec 05:0=
+0 PM
+                                            </span>
+                                            </font>
+                                        </td>
+                                        <td align=3D"left" style=3D"border:=
+0.5px solid black;background-color: #f8f4f4;height:40px;font-family: roboto=
+,helvetica neue,helvetica,arial,sans-serif;
+  font-size: 12px;
+  font-weight:bold;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: 1.33;
+  letter-spacing: 0.24px;
+  color: #676582;">
+
+                                            <span>&nbsp;</span>
+                                            <span
+                                                style=3D"font-weight:bold;f=
+ont-family: roboto,helvetica neue,helvetica,arial,sans-serif;">
+                                                Rs. 163.52<span style=3D"fo=
+nt-family:  roboto,helvetica neue,helvetica,arial,sans-serif;
+  font-size: 12px;
+  font-weight:normal;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: 1.33;
+  letter-spacing: 0.24px;
+  color: #676582;">(28%)</span>
+                                            </span>
+                                            </font>
+                                        </td>
+                                    </tr>  <tr>
+                                        <td style=3D"border:0.5px solid bla=
+ck;border-left:0.5px solid black;height:40px;font-family: roboto,helvetica =
+neue,helvetica,arial,sans-serif;
+  font-size: 12px;
+  font-weight: normal;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: 1.33;
+  letter-spacing: 0.24px;
+  color: #676582;">
+
+                                            <span
+                                                style=3D"font-weight:normal=
+;font-family:  roboto,helvetica neue,helvetica,arial,sans-serif;">
+                                                &nbsp; After 15th Dec 05:00=
+ PM &amp; Before 15th Dec 09:00 PM
+                                            </span>
+                                            </font>
+                                        </td>
+                                        <td align=3D"left" style=3D"border:=
+0.5px solid black;background-color: #f8f4f4;height:40px;font-family: roboto=
+,helvetica neue,helvetica,arial,sans-serif;
+  font-size: 12px;
+  font-weight:bold;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: 1.33;
+  letter-spacing: 0.24px;
+  color: #676582;">
+
+                                            <span>&nbsp;</span>
+                                            <span
+                                                style=3D"font-weight:bold;f=
+ont-family: roboto,helvetica neue,helvetica,arial,sans-serif;">
+                                                Rs. 327.04<span style=3D"fo=
+nt-family:  roboto,helvetica neue,helvetica,arial,sans-serif;
+  font-size: 12px;
+  font-weight:normal;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: 1.33;
+  letter-spacing: 0.24px;
+  color: #676582;">(56%)</span>
+                                            </span>
+                                            </font>
+                                        </td>
+                                    </tr>  <tr>
+                                        <td style=3D"border:0.5px solid bla=
+ck;border-left:0.5px solid black;height:40px;font-family: roboto,helvetica =
+neue,helvetica,arial,sans-serif;
+  font-size: 12px;
+  font-weight: normal;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: 1.33;
+  letter-spacing: 0.24px;
+  color: #676582;">
+
+                                            <span
+                                                style=3D"font-weight:normal=
+;font-family:  roboto,helvetica neue,helvetica,arial,sans-serif;">
+                                                &nbsp; After 15th Dec 09:00=
+ PM &amp; Before 16th Dec 05:00 AM
+                                            </span>
+                                            </font>
+                                        </td>
+                                        <td align=3D"left" style=3D"border:=
+0.5px solid black;background-color: #f8f4f4;height:40px;font-family: roboto=
+,helvetica neue,helvetica,arial,sans-serif;
+  font-size: 12px;
+  font-weight:bold;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: 1.33;
+  letter-spacing: 0.24px;
+  color: #676582;">
+
+                                            <span>&nbsp;</span>
+                                            <span
+                                                style=3D"font-weight:bold;f=
+ont-family: roboto,helvetica neue,helvetica,arial,sans-serif;">
+                                                Rs. 654.08<span style=3D"fo=
+nt-family:  roboto,helvetica neue,helvetica,arial,sans-serif;
+  font-size: 12px;
+  font-weight:normal;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: 1.33;
+  letter-spacing: 0.24px;
+  color: #676582;">(112%)</span>
+                                            </span>
+                                            </font>
+                                        </td>
+                                    </tr>=20
+                                </tbody>
+                            </table>
+                        </div>
+                <tr>
+                    <td style=3D"padding-top: 16px; padding-left: 26px;">
+                        <ul style=3D"margin:0; padding:0; line-height: 32px=
+;font-family: roboto,helvetica neue,helvetica,arial,sans-serif;
+  font-size: 14px;
+  font-weight: normal;
+  font-stretch: normal;
+  font-style: normal;
+  line-height:1.3;
+  letter-spacing: normal;
+  color: #7e7e8c;" align=3D"left" type=3D"disc">
+                            <li>Cancellation charges are computed on per se=
+at basis.</li><br>
+
+
+                            <li>For Group bookings, cancellation of individ=
+ual seats is not allowed. </li><br>
+
+
+
+
+
+
+
+
+                            <li>Note: Cancellation charges mentioned above =
+are excluding GST.</li>
+                        </ul>
+                    </td>
+                </tr>
+                <tr>
+                    <td style=3D"padding-top:28px; padding-left: 26px;">
+                        <div style=3D"font-family: roboto,helvetica neue,he=
+lvetica,arial,sans-serif;
+  font-size: 12px;
+  font-weight: bold;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: normal;
+  letter-spacing: normal;
+  color: #47475d;
+">
+                            How to cancel your ticket on redbus app</div>
+                        <div style=3D"line-height: 2.6;font-family: roboto,=
+helvetica neue,helvetica,arial,sans-serif;
+  font-size: 14px;
+  font-weight: normal;
+  font-stretch: normal;
+  font-style: normal;
+=20
+  letter-spacing: normal;
+  color: #3e3e52;
+">
+                            Go to my bookings and choose the journey and ca=
+ncel the ticket</div>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>
+                        <div style=3D"line-height: 2.6;font-family: roboto,=
+helvetica neue,helvetica,arial,sans-serif;
+  font-size: 14px;
+  font-weight: normal;
+  font-stretch: normal;
+  font-style: normal;
+=20
+  letter-spacing: normal;
+  color: #3e3e52;padding-top:24px;
+">
+                        </div>
+                    </td>
+                </tr>
+
+        </td>
+    </tr>
+    </table>
+    </td>
+    </tr> <!-- </table> -->
+    <!-- primo -->
+    <!-- booking Policy -->
+
+    <!-----redbuddy---->
+    <tr>
+        <td style=3D"padding-top: 16px;">
+            <table class=3D"ticketDetails" border=3D"0" cellpadding=3D"0" c=
+ellspacing=3D"0" role=3D"presentation" width=3D"580"
+                style=3D"margin: 0 auto; border-radius:7px 7px 7px 7px; bor=
+der: solid 1px #dddddd;">
+                <tr>
+                    <td style=3D"width:100%;padding-top:16px;padding-bottom=
+: 3px;">
+                        <table style=3D"width:100%;">
+                            <tbody style=3D"margin:0 0 8px 0;padding:5px;">
+                                <tr>
+                                    <td style=3D"width:10%;">
+                                        <a href=3D"https://b.redbus.com/oll=
+yg1n">
+                                            <img style=3D"width:35px;height=
+:35px;padding-left:20px;vertical-align:middle;"
+                                                src=3D"http://st.redbus.in/=
+Images/Eticket/Icons/speak@2x.png"
+                                                alt=3D"slfhlp">
+                                        </a>
+                                    </td>
+                                    <td style=3D"width:80%;">
+                                        <a data-saferedirecturl=3D"https://=
+b.redbus.com/ollyg1n"
+                                            href=3D"https://b.redbus.com/ol=
+lyg1n" target=3D"_blank"
+                                            style=3D"text-decoration:none;f=
+ont-family: roboto,helvetica neue,helvetica,arial,sans-serif;font-size:16px=
+;font-weight:bold;font-stretch:normal;font-style:normal;line-height:normal;=
+letter-spacing:normal;color:#3e3e52;padding-left:8px">Need
+                                            help? <span
+                                                style=3D"color:#d84e55;font=
+-family: roboto,helvetica neue,helvetica,arial,sans-serif;">redBuddy</span>
+                                            is here for you!</a>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </td>
+                </tr>
+                <tr>
+                    <td> </td>
+                </tr>
+                <tr>
+                    <td style=3D"width:100%"">
+                                <table style=3D" width:100%">
+                        <tbody>
+                            <td style=3D"width:25%;">
+                                <table style=3D"width:100%;">
+                                    <tbody>
+                                        <tr>
+                                            <td style=3D"width:1%;">
+                                                <img style=3D"max-width: 10=
+0%; min-width: 20px; width: 0%; margin-right: 8px;padding-left:20px;vertica=
+l-align: middle;"
+                                                    src=3D"https://st.redbu=
+s.in/PrejourneyMailer/Images/Icons/support@2x.png" />
+                                            </td>
+                                            <td style=3D"width:20%;">
+                                                <p
+                                                    style=3D"font-size: 14p=
+x; font-weight:normal; font-stretch: normal; font-style: normal; line-heigh=
+t: normal; letter-spacing: normal; color: #7e7e8c;font-family: roboto,helve=
+tica neue,helvetica,arial,sans-serif;">
+                                                    24x7 support</p>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </td>
+                            <td style=3D"width:25%;">
+                                <table style=3D"width:100%;">
+                                    <tbody>
+                                        <tr>
+                                            <td style=3D"width:1%;">
+                                                <img style=3D"max-width: 10=
+0%; min-width: 20px; width: 0%; margin-right: 8px;vertical-align: middle;"
+                                                    src=3D"https://st.redbu=
+s.in/PrejourneyMailer/Images/Icons/timer@2x.png" />
+                                            </td>
+                                            <td style=3D"width:20%;">
+                                                <p
+                                                    style=3D"font-size: 14p=
+x; font-weight:normal; font-stretch: normal; font-style: normal; line-heigh=
+t: normal; letter-spacing: normal; color: #7e7e8c;font-family: roboto,helve=
+tica neue,helvetica,arial,sans-serif;vertical-align: middle;">
+                                                    Quick Resolution</p>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </td>
+                            <td style=3D"width:25%;">
+                                <table style=3D"width:100%;">
+                                    <tbody>
+                                        <tr>
+                                            <td style=3D"width:1%;">
+                                                <img style=3D"max-width: 10=
+0%; min-width: 20px; width: 0%; margin-right: 8px;vertical-align: middle;"
+                                                    src=3D"https://st.redbu=
+s.in/PrejourneyMailer/Images/Icons/language@2x.png" />
+                                            </td>
+                                            <td style=3D"width:20%;">
+                                                <p
+                                                    style=3D"font-size: 14p=
+x; font-weight:normal; font-stretch: normal; font-style: normal; line-heigh=
+t: normal; letter-spacing: normal; color: #7e7e8c;font-family: roboto,helve=
+tica neue,helvetica,arial,sans-serif;">
+                                                    Multilingual</p>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </td>
+                        </tbody>
+            </table>
+        </td>
+    </tr>
+    <tr>
+        <td style=3D"width:100%"">
+                                <table style=3D" width:100%">
+            <tbody>
+                <td style=3D"width:25%;padding-top: 8px;padding-bottom: 8px=
+;">
+                    <table style=3D"width:100%;">
+                        <tbody>
+                            <tr>
+                                <td style=3D"width:20%;">
+                                    <div style=3D"padding:0px;text-align:le=
+ft;margin-left:20px;padding-bottom:10px;">
+                                        <div><a href=3D"https://b.redbus.co=
+m/ollyg1n" target=3D"_blank"
+                                                style=3D"background-color:#=
+465986;border-radius:4px;color:#ffffff;display:inline-block;font-size:12px;=
+font-weight:bold;line-height:28px;text-align:center;text-decoration:none;wi=
+dth:190px;font-family: roboto,helvetica neue,helvetica,arial,sans-serif;">C=
+HAT
+                                                WITH REDBUDDY</a></div>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </td>
+            </tbody>
+            </table>
+        </td>
+    </tr>
+    </table>
+    </td>
+    </tr>
+    <!--Travel guidelines -->
+    <tr>
+        <td style=3D"padding-top: 10px;">
+            <table class=3D"ticketDetails" border=3D"0" cellpadding=3D"0" c=
+ellspacing=3D"0" role=3D"presentation" width=3D"580"
+                style=3D"margin: 0 auto; border-radius:7px 7px 7px 7px; bor=
+der: solid 1px #dddddd;background-color:#f8f4f4;">
+                <tr>
+                    <td style=3D"width:100%;padding-top: 10px;padding-botto=
+m: 10px;">
+                        <div
+                            style=3D"font-family: roboto,helvetica neue,hel=
+vetica,arial,sans-serif;font-size: 14px;font-weight: bold;font-stretch: nor=
+mal;font-style: normal;line-height: normal;letter-spacing:normal;color: #3e=
+3e52;width:530px;margin-left:23px;">
+                            Travel Guidelines</div>
+                        <div
+                            style=3D"margin-top: 16px;margin-left:23px; fon=
+t-size:12px; font-size: 12px;font-weight: normal;font-stretch: normal;font-=
+style: normal;line-height: 1.7;letter-spacing: normal;color: #3e3e52;width:=
+550px;font-family: roboto,helvetica neue,helvetica,arial,sans-serif;">
+                            Please note it is mandatory to follow the trave=
+l guidelines of your source and
+                            destination state of
+                            travel. View Guidelines: <a href=3D"https://bit=
+.ly/redbus-guidelines"
+                                style=3D"color:black;text-decoration: none;=
+color:blue;font-family:  roboto,helvetica neue,helvetica,arial,sans-serif; =
+font-size: 14px; font-weight: normal; font-stretch: normal; font-style: nor=
+mal; line-height: 1.33; letter-spacing: normal; color: #1034d9;">https://bi=
+t.ly/redbus-guidelines</a>
+                        </div>
+                    </td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+    <tr>
+        <td style=3D"padding-top: 10px;">
+            <table class=3D"ticketDetails" border=3D"0" cellpadding=3D"0" c=
+ellspacing=3D"0" role=3D"presentation" width=3D"580"
+                style=3D"margin: 0 auto; border-radius:7px 7px 7px 7px; bor=
+der: solid 1px #dddddd;background-color:#f8f4f4;">
+                <tr>
+                    <td style=3D"width:100%;padding-top: 10px;">
+                        <div
+                            style=3D"font-family:roboto,helvetica neue,helv=
+etica,arial,sans-serif;font-size: 14px;font-weight: bold;font-stretch: norm=
+al;font-style: normal;line-height: normal;letter-spacing:normal;color: #3e3=
+e52;width:530px;margin-left:23px;">
+                            Terms and conditions</div>
+                        <div
+                            style=3D"margin-left:23px; font-size:12px; font=
+-size: 12px;font-weight: normal;font-stretch: normal;font-style: normal;lin=
+e-height: 1.7;letter-spacing: normal;color: #3e3e52;font-family:roboto,helv=
+etica neue,helvetica,arial,sans-serif;">
+                            <table cellspacing=3D"3"
+                                style=3D"overflow:visible;text-align:left;f=
+ont-variant:normal;font-weight:normal;font-size:14px;line-height:20px;font-=
+family:Asap,sans-serif;color:#333;padding:0;font-style:normal;">
+                                <tbody>
+
+
+                                    <tr>
+                                        <td
+                                            style=3D"width:47%;font-size:12=
+px;line-height:16px;vertical-align:top;margin-left:23px">
+                                            <ol style=3D"padding: 5px 5px 0=
+ 5px;margin: 0;">
+                                                <li>
+                                                    <p style=3D"padding:0">
+                                                        redBus* is an onlin=
+e ticketing platform. It does not operate bus
+                                                        services of its own=
+. In
+                                                        order to provide a
+                                                        comprehensive choic=
+e of bus operators, departure times and
+                                                        prices to customers=
+, it has tied
+                                                        up with many bus op=
+erators.
+                                                    </p>
+                                                    <p style=3D"font-weight=
+:bold;margin:0">redBus responsibilities
+                                                        include:
+                                                    </p>
+                                                    <ul style=3D"margin:0 0=
+ 10px 0;padding:0;list-style:none">
+                                                        <li style=3D"margin=
+-left:4px">(1) Issuing a valid ticket (a ticket
+                                                            that will be ac=
+cepted by
+                                                            the bus operato=
+r) for its network of bus operators</li>
+                                                        <li style=3D"margin=
+-left:4px">(2) Providing refund and support in
+                                                            the event of ca=
+ncellation
+                                                        </li>
+                                                        <li style=3D"margin=
+-left:4px"> (3) Providing customer support and
+                                                            information in =
+case of any
+                                                            delays / inconv=
+enience</li>
+                                                    </ul>
+
+                                                    <p style=3D"font-weight=
+:bold;margin:0">redBus responsibilities do not
+                                                        include:</p>
+
+                                                    <ul style=3D"margin:0 0=
+ 10px 0;padding:0;list-style:none">
+                                                        <li style=3D"margin=
+-left:4px">(1) The bus operator's bus not
+                                                            departing / rea=
+ching on time.</li>
+                                                        <li style=3D"margin=
+-left:4px">(2) The bus operator's employees
+                                                            being
+                                                            rude.</li>
+                                                        <li style=3D"margin=
+-left:4px">(3) The bus operator's bus seats etc
+                                                            not being up to=
+ the customer's expectation.</li>
+                                                        <li style=3D"margin=
+-left:4px">(4) The bus operator canceling the
+                                                            trip
+                                                            due to unavoida=
+ble reasons.</li>
+                                                        <li style=3D"margin=
+-left:4px">(5) The baggage of the customer
+                                                            getting
+                                                            lost / stolen /=
+ damaged.</li>
+                                                        <li style=3D"margin=
+-left:4px">(6) The bus operator changing a
+                                                            customer's seat=
+ at the last minute to accommodate
+                                                            a lady / child.=
+ </li>
+                                                        <li style=3D"margin=
+-left:4px">(7) The customer waiting at the
+                                                            wrong
+                                                            boarding point =
+(please call the bus operator
+                                                            to find out the=
+ exact boarding point if you are not a
+                                                            regular
+                                                            traveler on
+                                                            that particular=
+ bus).</li>
+                                                        <li style=3D"margin=
+-left:4px">(8) The bus operator changing the
+                                                            boarding point =
+and/or using a pick-up vehicle
+                                                            at the boarding=
+ point to take customers to the bus departure
+                                                            point.</li>
+                                                    </ul>
+                                                </li>
+                                                <li>
+                                                    <p style=3D"margin:0px =
+0 20px 0px;padding:0">
+                                                        The departure time =
+mentioned on the ticket are only tentative
+                                                        timings. However th=
+e bus will not leave the source before the
+                                                        time that is mentio=
+ned on the ticket.
+                                                    </p>
+                                                </li>
+                                                <li>
+                                                    <p style=3D"padding:0">=
+Passengers are required to furnish the
+                                                        following at
+                                                        the time of boardin=
+g the bus:
+                                                        <br>(1) A digital c=
+opy of the e-ticket or m-ticket.
+                                                        <br>(2) A valid ide=
+ntity proof
+                                                        <br>Failing to do s=
+o, they may not be allowed to board the bus.
+                                                    </p>
+                                                </li>
+                                                <li>
+                                                    <p style=3D"padding:0">
+                                                        <span>Change of bus=
+: In case the bus operator changes the type of bus due to some reason, redB=
+us will refund the differential amount to the customer upon being intimated=
+ by the customers in 24 hours of the journey.</span>
+                                                    </p>
+                                                </li>
+                                                <li>
+                                                    <p style=3D"padding:0">=
+Amenities for this bus as shown on redBus have
+                                                        been
+                                                        configured and prov=
+ided by the
+                                                        bus provider (bus o=
+perator). These amenities will be provided
+                                                        unless
+                                                        there are
+                                                        some exceptions on =
+certain days. Please note that redBus
+                                                        provides
+                                                        this information
+                                                        in good faith to he=
+lp passengers to make an informed decision.
+                                                        The
+                                                        liability
+                                                        of the amenity not =
+being made available lies with the operator
+                                                        and
+                                                        not with redBus.</p=
+>
+                                                </li>
+                                                <li>
+                                                    <p style=3D"padding:0">=
+In case a booking confirmation e-mail and sms
+                                                        gets
+                                                        delayed or fails be=
+cause of technical
+                                                        reasons or as a res=
+ult of incorrect e-mail ID / phone number
+                                                        provided by the
+                                                        user etc, a ticket =
+will be considered 'booked' as long as the
+                                                        ticket
+                                                        shows up
+                                                        on the confirmation=
+ page of <a href=3D"http://www.redBus.in"
+                                                            target=3D"_blan=
+k">www.redBus.in</a>
+                                                    </p>
+                                                </li>
+                                                <!--<li>
+                                         <p style=3D"padding:0">The GST on =
+fare, if any, is charged by the Bus Operator.=20
+                                            The tax invoice for the same wo=
+uld be separately issued by the Bus Operator</p>=20
+                                        </li> -->
+                                                <li>
+                                                    <p style=3D"padding:0">=
+Grievances and claims related to the bus
+                                                        journey should to b=
+e reported to
+                                                        redBus support team=
+ within 7 days of your Travel date.</p>
+                                                </li>
+                                                <!-- Don't show this sectio=
+n if Luggage policy is available in booking policies-->
+                                                <li>
+                                                    <p style=3D"padding:0">=
+Cancellation of this ticket is
+                                                        <b>NOT</b> allowed =
+after bus departure time.
+                                                    </p>
+                                                </li>
+
+                                            </ol>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan=3D"6">
+                                            <hr style=3D"border-top:0px sol=
+id #ccc">
+                                        </td>
+                                    </tr>
+
+
+                                </tbody>
+                            </table>
+                           =20
+                        </div>
+                    </td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <!--aggregator---->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        <!-----------------end---------->
+        </table>
+        </div>
+<img alt=3D"" src=3D"https://k0rdxj0.r.ap-southeast-1.awstrack.me/I0/010e01=
+93cb3a72b4-d4308ec3-ebc5-49ca-842c-df68a893a205-000000/8kcdHx7x3FHOZ55u4uyE=
+lYuIjCk=3D189" style=3D"display: none; width: 1px; height: 1px;">
+</body>
+
+</html>

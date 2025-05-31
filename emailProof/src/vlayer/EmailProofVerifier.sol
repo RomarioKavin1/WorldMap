@@ -19,19 +19,26 @@ contract EmailDomainVerifier is Verifier, ERC721 {
         prover = _prover;
     }
 
-    function verify(Proof calldata, bytes32 _emailHash, address _targetWallet, string memory _emailDomain)
-        public
-        onlyVerified(prover, EmailDomainProver.main.selector)
-    {
+    function verify(
+        Proof calldata,
+        bytes32 _emailHash,
+        address _targetWallet,
+        string memory _emailDomain
+    ) public onlyVerified(prover, EmailDomainProver.main.selector) {
         require(takenEmailHashes[_emailHash] == false, "email taken");
         takenEmailHashes[_emailHash] = true;
         uint256 tokenId = currentTokenId + 1;
-        tokenIdToMetadataUri[tokenId] = string.concat("https://faucet.vlayer.xyz/api/xBadgeMeta?handle=", _emailDomain);
+        tokenIdToMetadataUri[tokenId] = string.concat(
+            "https://faucet.vlayer.xyz/api/xBadgeMeta?handle=",
+            _emailDomain
+        );
         currentTokenId = tokenId;
         _safeMint(_targetWallet, tokenId);
     }
 
-    function tokenURI(uint256 tokenId) public view override returns (string memory) {
+    function tokenURI(
+        uint256 tokenId
+    ) public view override returns (string memory) {
         return tokenIdToMetadataUri[tokenId];
     }
 }
