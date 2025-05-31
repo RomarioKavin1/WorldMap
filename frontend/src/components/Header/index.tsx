@@ -1,24 +1,66 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Logo } from "@/components/Logo";
 import Image from "next/image";
+import { Marble } from "@worldcoin/mini-apps-ui-kit-react";
 
 interface HeaderProps {
   showMeritModal?: boolean; // For pages like merit-miles where modal isn't needed
 }
 
+// Custom hook to get session data from client-side
+const useSession = () => {
+  const [session, setSession] = useState<any>(null);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const loadSession = async () => {
+      try {
+        setIsLoading(true);
+        // Use fetch to call your API route for session data
+        const response = await fetch("/api/auth/session");
+        if (response.ok) {
+          const sessionData = await response.json();
+          setSession(sessionData);
+        } else {
+          setSession(null);
+        }
+      } catch (error) {
+        console.error("Error loading session:", error);
+        setSession(null);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    loadSession();
+  }, []);
+
+  return { session, isLoading };
+};
+
 export const Header = ({ showMeritModal = true }: HeaderProps) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const { session, isLoading } = useSession();
 
   return (
     <>
       {/* Header */}
       <div className="absolute top-0 left-0 right-0 z-30 flex justify-between p-6">
-        {/* Left Logo/Profile */}
-        <div className="w-8 h-8 border rounded-full bg-gradient-to-br from-blue-500 to-purple-500 flex items-center justify-center -ml-2"></div>
+        {/* Left Profile Picture */}
+        <div className="-ml-2">
+          {isLoading ? (
+            <div className="w-8 h-8 border rounded-full bg-white/20 animate-pulse" />
+          ) : (
+            <Marble
+              src={session?.user?.profilePictureUrl}
+              className="w-8 h-8"
+            />
+          )}
+        </div>
 
         {/* Center Logo */}
-        <div className=" -mt-6">
+        <div className=" -mt-3">
           <Logo size={"lg"} />
         </div>
 

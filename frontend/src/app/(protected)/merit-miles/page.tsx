@@ -64,7 +64,10 @@ export default function MeritMilesPage() {
     },
   ];
 
-  const formatAddress = (address: string) => {
+  const formatAddress = (address?: string) => {
+    if (!address || address.length < 10) {
+      return "0x000...0000"; // Fallback for invalid/short addresses
+    }
     return `${address.slice(0, 6)}...${address.slice(-4)}`;
   };
 

@@ -17,6 +17,7 @@ import {
 interface TripProps {
   trip: TripData;
   onClick?: (trip: TripData) => void;
+  isHighlighted?: boolean;
 }
 
 const getTravelTypeIcon = (travelType: TripData["travelType"]) => {
@@ -45,12 +46,30 @@ const getTravelTypeColor = (travelType: TripData["travelType"]) => {
   }
 };
 
-export const Trip: React.FC<TripProps> = ({ trip, onClick }) => {
+export const Trip: React.FC<TripProps> = ({
+  trip,
+  onClick,
+  isHighlighted = false,
+}) => {
   return (
     <div
-      className="relative bg-white/7 backdrop-blur-xl rounded-xl p-3 transition-all duration-300 cursor-pointer group hover:bg-white/8 active:scale-[0.98]"
+      className={`relative backdrop-blur-xl rounded-xl p-3 transition-all duration-300 cursor-pointer group active:scale-[0.98] ${
+        isHighlighted
+          ? "bg-green-500/20 border border-green-500/40 hover:bg-green-500/25"
+          : "bg-white/7 hover:bg-white/8"
+      }`}
       onClick={() => onClick?.(trip)}
     >
+      {/* Highlighted indicator */}
+      {isHighlighted && (
+        <div className="absolute top-2 right-2">
+          <div className="flex items-center space-x-1 bg-green-500/30 text-green-300 text-xs px-2 py-1 rounded-full font-medium">
+            <div className="w-1.5 h-1.5 bg-green-400 rounded-full animate-pulse"></div>
+            <span>NOW SHOWING</span>
+          </div>
+        </div>
+      )}
+
       {/* Background Gradient Overlay */}
       <div
         className={`absolute inset-0 bg-gradient-to-br ${getTravelTypeColor(

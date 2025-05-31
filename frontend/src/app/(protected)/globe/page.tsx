@@ -233,9 +233,8 @@ export default function GlobePage() {
           autoRotate={true}
         />
       </div>
-
       {/* Pull-up Drawer */}
-      <RecentTrips recentTrips={recentTrips} recentStays={recentStays} />
+      <RecentTrips trips={recentTrips} stays={recentStays} />
 
       {/* Bottom Navigation */}
       <BottomNav activeTab="globe" />
