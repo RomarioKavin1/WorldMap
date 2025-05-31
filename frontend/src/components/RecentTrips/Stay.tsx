@@ -36,7 +36,7 @@ const getAccommodationIcon = (type: StayData["accommodationType"]) => {
 export const Stay: React.FC<StayProps> = ({ stay, onClick }) => {
   return (
     <div
-      className="relative bg-white/5 backdrop-blur-xl rounded-xl p-3 border border-white/10 hover:border-white/20 transition-all duration-300 cursor-pointer group hover:bg-white/8 active:scale-[0.98]"
+      className="relative bg-white/5 backdrop-blur-xl rounded-xl p-3 active:scale-[0.98]"
       onClick={() => onClick?.(stay)}
     >
       <div className="relative flex items-center space-x-3">

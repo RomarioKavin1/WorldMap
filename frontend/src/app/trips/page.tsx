@@ -101,66 +101,6 @@ export default function TripsPage() {
       accommodationType: "resort",
       icon: "🏖️",
     },
-    {
-      id: "s5",
-      location: "Dubai",
-      country: "UAE",
-      flag: "🇦🇪",
-      dates: "Jul 15-22, 2024",
-      duration: "1 week",
-      accommodationType: "hotel",
-      icon: "🏢",
-    },
-    {
-      id: "s6",
-      location: "New York",
-      country: "USA",
-      flag: "🇺🇸",
-      dates: "Jun 10-15, 2024",
-      duration: "5 nights",
-      accommodationType: "apartment",
-      icon: "🏙️",
-    },
-    {
-      id: "s7",
-      location: "Barcelona",
-      country: "Spain",
-      flag: "🇪🇸",
-      dates: "May 20-27, 2024",
-      duration: "1 week",
-      accommodationType: "airbnb",
-      icon: "🏛️",
-    },
-    {
-      id: "s8",
-      location: "Bangkok",
-      country: "Thailand",
-      flag: "🇹🇭",
-      dates: "Apr 12-18, 2024",
-      duration: "6 nights",
-      accommodationType: "hostel",
-      icon: "🏯",
-    },
-    {
-      id: "s9",
-      location: "Rome",
-      country: "Italy",
-      flag: "🇮🇹",
-      dates: "Mar 8-14, 2024",
-      duration: "6 nights",
-      accommodationType: "hotel",
-      icon: "🏛️",
-    },
-    {
-      id: "s10",
-      location: "Santorini",
-      country: "Greece",
-      flag: "🇬🇷",
-      dates: "Feb 14-21, 2024",
-      duration: "1 week",
-      accommodationType: "resort",
-      icon: "🏖️",
-    },
   ];
 
   // Calculate statistics
@@ -347,9 +287,6 @@ export default function TripsPage() {
             </h2>
             <p className="text-white/50 text-xs mt-1">Your trips and stays</p>
           </div>
-          <button className="bg-white/10 border border-white/20 text-white text-sm px-4 py-2 rounded-xl hover:bg-white/20 transition-colors">
-            Filter
-          </button>
         </div>
 
         {/* Activities List (Mixed Trips and Stays) */}

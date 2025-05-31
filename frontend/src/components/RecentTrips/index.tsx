@@ -266,7 +266,7 @@ export const RecentTrips: React.FC = () => {
       >
         {/* Glass Morphic Drawer Content */}
         <div
-          className="bg-black/90 backdrop-blur-2xl rounded-t-3xl border-t border-white/20 shadow-2xl  active:cursor-grabbing"
+          className="bg-black/90 backdrop-blur-2xl rounded-t-3xl border-t border-white/10 shadow-2xl  active:cursor-grabbing"
           onMouseDown={handleMouseDown}
           onTouchStart={handleTouchStart}
         >
@@ -355,29 +355,6 @@ export const RecentTrips: React.FC = () => {
                   <p className="text-white/40 text-sm">
                     Start exploring the world!
                   </p>
-                </div>
-              )}
-
-              {/* Extra content for expanded view */}
-              {drawerState === "expanded" && (
-                <div className="mt-8 pt-6 border-t border-white/10">
-                  <h3 className="text-xl font-semibold text-white mb-4">
-                    Activity Statistics
-                  </h3>
-                  <div className="grid grid-cols-2 gap-4">
-                    <div className="bg-white/5 rounded-xl p-4 text-center">
-                      <div className="text-2xl font-bold text-blue-400">
-                        {recentTrips.length}
-                      </div>
-                      <div className="text-white/60 text-sm">Trips</div>
-                    </div>
-                    <div className="bg-white/5 rounded-xl p-4 text-center">
-                      <div className="text-2xl font-bold text-green-400">
-                        {recentStays.length}
-                      </div>
-                      <div className="text-white/60 text-sm">Stays</div>
-                    </div>
-                  </div>
                 </div>
               )}
             </div>

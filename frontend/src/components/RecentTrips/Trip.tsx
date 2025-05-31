@@ -45,7 +45,7 @@ const getTravelTypeColor = (travelType: TripData["travelType"]) => {
 export const Trip: React.FC<TripProps> = ({ trip, onClick }) => {
   return (
     <div
-      className="relative bg-white/5 backdrop-blur-xl rounded-xl p-3 border border-white/10 hover:border-white/20 transition-all duration-300 cursor-pointer group hover:bg-white/8 active:scale-[0.98]"
+      className="relative bg-slate-900/70 backdrop-blur-xl rounded-xl p-3 transition-all duration-300 cursor-pointer group hover:bg-white/8 active:scale-[0.98]"
       onClick={() => onClick?.(trip)}
     >
       {/* Background Gradient Overlay */}
