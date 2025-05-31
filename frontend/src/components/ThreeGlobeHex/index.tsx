@@ -1,4 +1,5 @@
 "use client";
+/* eslint-disable react/prop-types */
 import { useRef, useEffect, useMemo } from "react";
 import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
@@ -7,6 +8,16 @@ import ThreeGlobeLib from "three-globe";
 interface ArcCoordinate {
   lat: number;
   lng: number;
+}
+
+interface ProcessedArc {
+  startLat: number;
+  startLng: number;
+  endLat: number;
+  endLng: number;
+  pathIndex: number;
+  segmentIndex: number;
+  id: string;
 }
 
 interface ThreeGlobeHexProps {
@@ -22,13 +33,13 @@ export const ThreeGlobeHex: React.FC<ThreeGlobeHexProps> = ({
 }) => {
   const mountRef = useRef<HTMLDivElement>(null);
   const frameRef = useRef<number | undefined>(undefined);
-  const globeRef = useRef<any>(null);
+  const globeRef = useRef<ThreeGlobeLib | null>(null);
   const earthGroupRef = useRef<THREE.Group | null>(null);
   const animationTimerRef = useRef<NodeJS.Timeout | null>(null);
 
   // Memoize arc processing to prevent unnecessary recalculations
   const arcs = useMemo(() => {
-    const processedArcs: any[] = [];
+    const processedArcs: ProcessedArc[] = [];
     if (arcPaths && arcPaths.length > 0) {
       arcPaths.forEach((path, pathIndex) => {
         for (let i = 0; i < path.length - 1; i++) {
@@ -51,7 +62,8 @@ export const ThreeGlobeHex: React.FC<ThreeGlobeHexProps> = ({
   }, [arcPaths]);
 
   useEffect(() => {
-    if (!mountRef.current) return;
+    const mountElement = mountRef.current;
+    if (!mountElement) return;
 
     // Scene setup
     const scene = new THREE.Scene();
@@ -63,7 +75,7 @@ export const ThreeGlobeHex: React.FC<ThreeGlobeHexProps> = ({
       0.1,
       1000
     );
-    camera.position.z = 325;
+    camera.position.z = 300;
 
     // Renderer setup
     const renderer = new THREE.WebGLRenderer({
@@ -73,7 +85,7 @@ export const ThreeGlobeHex: React.FC<ThreeGlobeHexProps> = ({
     renderer.setSize(window.innerWidth, window.innerHeight);
     renderer.setPixelRatio(window.devicePixelRatio);
     renderer.setClearColor(0x000000, 0);
-    mountRef.current.appendChild(renderer.domElement);
+    mountElement.appendChild(renderer.domElement);
 
     // Create hex polygon globe
     const globe = new ThreeGlobeLib().globeImageUrl(
@@ -183,15 +195,15 @@ export const ThreeGlobeHex: React.FC<ThreeGlobeHexProps> = ({
       // Dispose controls
       controls.dispose();
 
-      if (mountRef.current && renderer.domElement) {
-        mountRef.current.removeChild(renderer.domElement);
+      if (mountElement && renderer.domElement) {
+        mountElement.removeChild(renderer.domElement);
       }
 
       // Dispose of Three.js objects
       scene.clear();
       renderer.dispose();
     };
-  }, [arcPaths, autoRotate]);
+  }, []); // Only run once on mount
 
   // Arc animation effect - rotates globe to show each arc
   useEffect(() => {
@@ -220,7 +232,9 @@ export const ThreeGlobeHex: React.FC<ThreeGlobeHexProps> = ({
       console.log("Setting arc data for globe:", currentArc);
 
       // Show current arc
-      globeRef.current.arcsData([currentArc]);
+      if (globeRef.current) {
+        globeRef.current.arcsData([currentArc]);
+      }
 
       console.log(
         `Showing arc ${currentIndex + 1}/${arcs.length}:`,
@@ -257,7 +271,7 @@ export const ThreeGlobeHex: React.FC<ThreeGlobeHexProps> = ({
   }, [arcs, animationSpeed, autoRotate]);
 
   // Function to smoothly rotate globe to show current arc
-  const rotateGlobeToArc = (arc: any) => {
+  const rotateGlobeToArc = (arc: ProcessedArc) => {
     if (!earthGroupRef.current || !globeRef.current) return;
 
     // Calculate the center point between start and end coordinates

@@ -1,5 +1,5 @@
 "use client";
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useCallback } from "react";
 
 interface Trip {
   id: string;
@@ -93,13 +93,16 @@ export const RecentTrips: React.FC = () => {
   };
 
   // Handle drag move
-  const handleDragMove = (clientY: number) => {
-    if (!isDragging) return;
-    setCurrentY(clientY);
-  };
+  const handleDragMove = useCallback(
+    (clientY: number) => {
+      if (!isDragging) return;
+      setCurrentY(clientY);
+    },
+    [isDragging]
+  );
 
   // Handle drag end
-  const handleDragEnd = () => {
+  const handleDragEnd = useCallback(() => {
     if (!isDragging) return;
 
     const deltaY = currentY - startY;
@@ -124,7 +127,7 @@ export const RecentTrips: React.FC = () => {
     setIsDragging(false);
     setStartY(0);
     setCurrentY(0);
-  };
+  }, [isDragging, currentY, startY, drawerState]);
 
   // Mouse events
   const handleMouseDown = (e: React.MouseEvent) => {
@@ -132,30 +135,30 @@ export const RecentTrips: React.FC = () => {
     handleDragStart(e.clientY);
   };
 
-  const handleMouseMove = (e: MouseEvent) => {
-    handleDragMove(e.clientY);
-  };
-
-  const handleMouseUp = () => {
-    handleDragEnd();
-  };
-
   // Touch events
   const handleTouchStart = (e: React.TouchEvent) => {
     handleDragStart(e.touches[0].clientY);
   };
 
-  const handleTouchMove = (e: TouchEvent) => {
-    e.preventDefault();
-    handleDragMove(e.touches[0].clientY);
-  };
-
-  const handleTouchEnd = () => {
-    handleDragEnd();
-  };
-
   // Add global event listeners for drag
   useEffect(() => {
+    const handleMouseMove = (e: MouseEvent) => {
+      handleDragMove(e.clientY);
+    };
+
+    const handleMouseUp = () => {
+      handleDragEnd();
+    };
+
+    const handleTouchMove = (e: TouchEvent) => {
+      e.preventDefault();
+      handleDragMove(e.touches[0].clientY);
+    };
+
+    const handleTouchEnd = () => {
+      handleDragEnd();
+    };
+
     if (isDragging) {
       document.addEventListener("mousemove", handleMouseMove);
       document.addEventListener("mouseup", handleMouseUp);
@@ -171,7 +174,7 @@ export const RecentTrips: React.FC = () => {
         document.removeEventListener("touchend", handleTouchEnd);
       };
     }
-  }, [isDragging, startY, currentY]);
+  }, [isDragging, handleDragMove, handleDragEnd]);
 
   // Calculate dynamic transform during drag
   const getDynamicTransform = () => {
