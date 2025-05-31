@@ -9,9 +9,9 @@ export default function Home() {
       <ThreeGlobeComponent />
 
       {/* Main Content */}
-      <div className="relative z-10 flex flex-col items-center justify-center space-y-12 -mt-70">
+      <div className="relative z-10 flex flex-col items-center justify-center ">
         {/* Enhanced World Map Title */}
-        <div className="text-center space-y-4">
+        <div className="text-center ">
           <h1 className="text-6xl font-bold text-center leading-none opacity-70">
             <div className="flex items-center justify-center gap-0">
               <img src="/world.png" className="w-40 h-40" />
@@ -23,7 +23,7 @@ export default function Home() {
         </div>
 
         {/* Enhanced Auth Button Container */}
-        <div className="w-fit opacity-70 mt-20">
+        <div className="w-fit opacity-70 -mt-10">
           <AuthButton />
         </div>
       </div>
