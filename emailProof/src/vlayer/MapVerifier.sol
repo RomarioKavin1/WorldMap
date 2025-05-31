@@ -63,32 +63,48 @@ contract MapVerifier is Verifier {
         emit EmailRegistered(msg.sender, newEmail);
     }
 
+    // Flight verification function
+    function verifyFlight(
+        Proof calldata /* proof */,
+        MapProver.VerifiedBooking calldata booking
+    ) public onlyVerified(prover, MapProver.addVerifiedFlight.selector) {
+        _verifyBooking(booking);
+        emit BookingVerified(msg.sender, booking.toEmail, booking.bookingType);
+    }
+
+    // Hotel verification function
+    function verifyHotel(
+        Proof calldata /* proof */,
+        MapProver.VerifiedBooking calldata booking
+    ) public onlyVerified(prover, MapProver.addVerifiedHotel.selector) {
+        _verifyBooking(booking);
+        emit BookingVerified(msg.sender, booking.toEmail, booking.bookingType);
+    }
+
+    // Bus verification function
+    function verifyBus(
+        Proof calldata /* proof */,
+        MapProver.VerifiedBooking calldata booking
+    ) public onlyVerified(prover, MapProver.addVerifiedBus.selector) {
+        _verifyBooking(booking);
+        emit BookingVerified(msg.sender, booking.toEmail, booking.bookingType);
+    }
+
+    // Generic verification function (for backward compatibility)
     function verify(
         Proof calldata proof,
         MapProver.VerifiedBooking calldata booking
     ) public {
-        // Verify the proof based on booking type
+        // Route to specific verification functions based on booking type
         if (booking.bookingType == MapProver.BookingType.FLIGHT) {
-            require(
-                isVerified(prover, MapProver.addVerifiedFlight.selector, proof),
-                "Invalid flight proof"
-            );
+            verifyFlight(proof, booking);
         } else if (booking.bookingType == MapProver.BookingType.HOTEL) {
-            require(
-                isVerified(prover, MapProver.addVerifiedHotel.selector, proof),
-                "Invalid hotel proof"
-            );
+            verifyHotel(proof, booking);
         } else if (booking.bookingType == MapProver.BookingType.BUS) {
-            require(
-                isVerified(prover, MapProver.addVerifiedBus.selector, proof),
-                "Invalid bus proof"
-            );
+            verifyBus(proof, booking);
         } else {
             revert("Unsupported booking type");
         }
-
-        _verifyBooking(booking);
-        emit BookingVerified(msg.sender, booking.toEmail, booking.bookingType);
     }
 
     // Internal function to handle common verification logic

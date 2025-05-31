@@ -137,7 +137,7 @@ contract MapProver is Prover {
 
     function addVerifiedFlight(
         UnverifiedEmail calldata unverifiedEmail
-    ) public view returns (Proof memory, VerifiedBooking memory) {
+    ) public returns (Proof memory, VerifiedBooking memory) {
         VerifiedEmail memory email = unverifiedEmail.verify();
 
         // Extract booking ID from subject
@@ -232,15 +232,14 @@ contract MapProver is Prover {
 
     function addVerifiedHotel(
         UnverifiedEmail calldata unverifiedEmail
-    ) public view returns (Proof memory, VerifiedBooking memory) {
+    ) public returns (Proof memory, VerifiedBooking memory) {
         VerifiedEmail memory email = unverifiedEmail.verify();
 
         // Extract booking ID from subject
-        string[] memory subjectCapture = email.subject.capture(
+        string[] memory captures = email.subject.capture(
             "^Booking confirmation with Agoda - Booking ID: ([0-9]+)$"
         );
-        require(subjectCapture.length > 0, "no booking ID in subject");
-        string memory bookingId = subjectCapture[1];
+        require(captures.length > 0, "no booking ID in subject");
 
         // Extract from domain
         string[] memory fromCaptures = email.from.capture(
@@ -249,90 +248,78 @@ contract MapProver is Prover {
         require(fromCaptures.length == 2, "invalid email domain");
         require(bytes(fromCaptures[1]).length > 0, "invalid email domain");
 
-        // Extract hotel name from email body
-        string[] memory hotelNameCaptures = email.body.capture(
-            'id=3D"lblHotelNameData">([^<]+)</strong>'
-        );
-        require(hotelNameCaptures.length >= 2, "invalid hotel name");
-        string memory hotelName = hotelNameCaptures[1];
-
-        // Extract guest name from email body
-        string[] memory guestNameCaptures = email.body.capture(
-            'id=3D"booking-leadguest">\\s*([^<]+)'
-        );
-        require(guestNameCaptures.length >= 2, "invalid guest name");
-        string memory guestName = guestNameCaptures[1];
-
-        // Extract check-in date from email body
-        string[] memory checkinCaptures = email.body.capture(
-            'id=3D"checkin-date">\\s*([A-Za-z]+, [A-Za-z]+ [0-9]{1,2}, [0-9]{4})'
-        );
-        require(checkinCaptures.length >= 2, "invalid check-in date");
-        string memory checkinDate = checkinCaptures[1];
-
-        // Extract check-out date from email body
-        string[] memory checkoutCaptures = email.body.capture(
-            'id=3D"checkout-date">\\s*([A-Za-z]+, [A-Za-z]+ [0-9]{1,2}, [0-9]{4})'
-        );
-        require(checkoutCaptures.length >= 2, "invalid check-out date");
-        string memory checkoutDate = checkoutCaptures[1];
-
-        // Extract location from email body
-        string[] memory locationCaptures = email.body.capture(
-            "gapore, ([^,]+), ([0-9]+)"
-        );
-        require(locationCaptures.length >= 3, "invalid location");
-        string memory location = locationCaptures[1]; // Singapore
-
-        // Extract total price from email body
-        string[] memory priceCaptures = email.body.capture(
-            'id=3D"total-price-value">\\s*SGD ([0-9]+\\.[0-9]{2})'
-        );
-        require(priceCaptures.length >= 2, "invalid total price");
-        string memory totalPrice = priceCaptures[1];
-
-        // Extract booking date from email body (from Date header)
-        string[] memory bookingDateCaptures = email.body.capture(
-            "Date: [A-Za-z]+, ([0-9]{1,2} [A-Za-z]+ [0-9]{4})"
-        );
-        require(bookingDateCaptures.length >= 2, "invalid booking date");
-        string memory bookingDate = bookingDateCaptures[1];
-
         bytes32 emailHash = sha256(abi.encodePacked(email.from));
 
-        // Create standardized booking data
-        VerifiedBooking memory booking = VerifiedBooking({
-            emailHash: emailHash,
-            fromDomain: fromCaptures[1],
-            toEmail: email.to,
-            bookingId: bookingId,
-            fromLocation: location,
-            toLocation: location, // Same location for hotels
-            startDate: checkinDate,
-            endDate: checkoutDate,
-            customerName: guestName,
-            price: totalPrice,
-            provider: hotelName,
-            additionalInfo1: "", // Room details not captured
-            additionalInfo2: bookingDate,
-            bookingType: BookingType.HOTEL,
-            timestamp: block.timestamp
-        });
+        // Create booking directly with inline captures to reduce local variables
+        VerifiedBooking memory booking;
+        booking.emailHash = emailHash;
+        booking.fromDomain = fromCaptures[1];
+        booking.toEmail = email.to;
+        booking.bookingId = captures[1];
+        booking.bookingType = BookingType.HOTEL;
+        booking.timestamp = block.timestamp;
+
+        // Extract hotel name
+        captures = email.body.capture(
+            'id=3D"lblHotelNameData">([^<]+)</strong>'
+        );
+        require(captures.length >= 2, "invalid hotel name");
+        booking.provider = captures[1];
+
+        // Extract guest name
+        captures = email.body.capture('id=3D"booking-leadguest">\\s*([^<]+)');
+        require(captures.length >= 2, "invalid guest name");
+        booking.customerName = captures[1];
+
+        // Extract check-in date
+        captures = email.body.capture(
+            'id=3D"checkin-date">\\s*([A-Za-z]+, [A-Za-z]+ [0-9]{1,2}, [0-9]{4})'
+        );
+        require(captures.length >= 2, "invalid check-in date");
+        booking.startDate = captures[1];
+
+        // Extract check-out date
+        captures = email.body.capture(
+            'id=3D"checkout-date">\\s*([A-Za-z]+, [A-Za-z]+ [0-9]{1,2}, [0-9]{4})'
+        );
+        require(captures.length >= 2, "invalid check-out date");
+        booking.endDate = captures[1];
+
+        // Extract location
+        captures = email.body.capture("gapore, ([^,]+), ([0-9]+)");
+        require(captures.length >= 3, "invalid location");
+        booking.fromLocation = captures[1];
+        booking.toLocation = captures[1]; // Same location for hotels
+
+        // Extract total price
+        captures = email.body.capture(
+            'id=3D"total-price-value">\\s*SGD ([0-9]+\\.[0-9]{2})'
+        );
+        require(captures.length >= 2, "invalid total price");
+        booking.price = captures[1];
+
+        // Extract booking date
+        captures = email.body.capture(
+            "Date: [A-Za-z]+, ([0-9]{1,2} [A-Za-z]+ [0-9]{4})"
+        );
+        require(captures.length >= 2, "invalid booking date");
+        booking.additionalInfo1 = ""; // Room details not captured
+        booking.additionalInfo2 = captures[1];
 
         // Emit standardized event
         emit BookingVerified(
             emailHash,
             msg.sender,
             BookingType.HOTEL,
-            fromCaptures[1],
-            bookingId,
-            location,
-            location,
-            checkinDate,
-            checkoutDate,
-            guestName,
-            totalPrice,
-            hotelName,
+            booking.fromDomain,
+            booking.bookingId,
+            booking.fromLocation,
+            booking.toLocation,
+            booking.startDate,
+            booking.endDate,
+            booking.customerName,
+            booking.price,
+            booking.provider,
             block.timestamp
         );
 
@@ -340,15 +327,15 @@ contract MapProver is Prover {
         emit HotelVerified(
             emailHash,
             msg.sender,
-            fromCaptures[1],
-            bookingId,
-            hotelName,
-            guestName,
-            checkinDate,
-            checkoutDate,
-            location,
-            totalPrice,
-            bookingDate,
+            booking.fromDomain,
+            booking.bookingId,
+            booking.provider,
+            booking.customerName,
+            booking.startDate,
+            booking.endDate,
+            booking.fromLocation,
+            booking.price,
+            booking.additionalInfo2,
             block.timestamp
         );
 
@@ -357,15 +344,14 @@ contract MapProver is Prover {
 
     function addVerifiedBus(
         UnverifiedEmail calldata unverifiedEmail
-    ) public view returns (Proof memory, VerifiedBooking memory) {
+    ) public returns (Proof memory, VerifiedBooking memory) {
         VerifiedEmail memory email = unverifiedEmail.verify();
 
         // Extract ticket number from subject
-        string[] memory subjectCapture = email.subject.capture(
+        string[] memory captures = email.subject.capture(
             "^redBus Ticket - ([A-Z0-9]+)$"
         );
-        require(subjectCapture.length > 0, "no ticket number in subject");
-        string memory ticketNumber = subjectCapture[1];
+        require(captures.length > 0, "no ticket number in subject");
 
         // Extract from domain
         string[] memory fromCaptures = email.from.capture(
@@ -374,92 +360,75 @@ contract MapProver is Prover {
         require(fromCaptures.length == 2, "invalid email domain");
         require(bytes(fromCaptures[1]).length > 0, "invalid email domain");
 
-        // Extract PNR number from email body
-        string[] memory pnrCaptures = email.body.capture(
-            "PNR&nbsp;No:&nbsp;<b>([0-9]+)</b>"
-        );
-        require(pnrCaptures.length >= 2, "invalid PNR number");
-        string memory pnrNumber = pnrCaptures[1];
-
-        // Extract journey route from email body
-        string[] memory routeCaptures = email.body.capture(
-            "([A-Za-z]+)-([A-Za-z]+) on [A-Za-z]+, [A-Za-z]+ [0-9]{1,2}, [0-9]{4}"
-        );
-        require(routeCaptures.length >= 3, "invalid journey route");
-        string memory departureCity = routeCaptures[1]; // Chennai
-        string memory arrivalCity = routeCaptures[2]; // Bangalore
-
-        // Extract travel date from email body
-        string[] memory travelDateCaptures = email.body.capture(
-            "([0-9]{2}/[0-9]{2}/[0-9]{4}), ([0-9]{2}:[0-9]{2} [A-Z]{2})"
-        );
-        require(travelDateCaptures.length >= 3, "invalid travel date");
-        string memory travelDate = travelDateCaptures[1]; // 16/12/2024
-        string memory departureTime = travelDateCaptures[2]; // 05:00 AM
-
-        // Extract passenger name from email body
-        string[] memory passengerCaptures = email.body.capture(
-            "class=3D'liketext'> ([A-Za-z ]+)"
-        );
-        require(passengerCaptures.length >= 2, "invalid passenger name");
-        string memory passengerName = passengerCaptures[1];
-
-        // Extract seat number from email body
-        string[] memory seatCaptures = email.body.capture(
-            'color: #d5585d;">\\s*([0-9]+)</p>'
-        );
-        require(seatCaptures.length >= 2, "invalid seat number");
-        string memory seatNumber = seatCaptures[1];
-
-        // Extract price from email body
-        string[] memory priceCaptures = email.body.capture(
-            "Rs\\. ([0-9]+\\.[0-9]+)"
-        );
-        require(priceCaptures.length >= 2, "invalid price");
-        string memory price = priceCaptures[1];
-
-        // Extract bus operator from email body
-        string[] memory operatorCaptures = email.body.capture(
-            'color: #47475d;font-family: roboto[^>]+">\\s*([A-Za-z]+) </div>'
-        );
-        require(operatorCaptures.length >= 2, "invalid bus operator");
-        string memory busOperator = operatorCaptures[1];
-
         bytes32 emailHash = sha256(abi.encodePacked(email.from));
 
-        // Create standardized booking data
-        VerifiedBooking memory booking = VerifiedBooking({
-            emailHash: emailHash,
-            fromDomain: fromCaptures[1],
-            toEmail: email.to,
-            bookingId: ticketNumber,
-            fromLocation: departureCity,
-            toLocation: arrivalCity,
-            startDate: travelDate,
-            endDate: travelDate, // Same day for bus travel
-            customerName: passengerName,
-            price: price,
-            provider: busOperator,
-            additionalInfo1: seatNumber,
-            additionalInfo2: pnrNumber,
-            bookingType: BookingType.BUS,
-            timestamp: block.timestamp
-        });
+        // Create booking directly with inline captures to reduce local variables
+        VerifiedBooking memory booking;
+        booking.emailHash = emailHash;
+        booking.fromDomain = fromCaptures[1];
+        booking.toEmail = email.to;
+        booking.bookingId = captures[1];
+        booking.bookingType = BookingType.BUS;
+        booking.timestamp = block.timestamp;
+
+        // Extract PNR number
+        captures = email.body.capture("PNR&nbsp;No:&nbsp;<b>([0-9]+)</b>");
+        require(captures.length >= 2, "invalid PNR number");
+        booking.additionalInfo2 = captures[1];
+
+        // Extract journey route
+        captures = email.body.capture(
+            "([A-Za-z]+)-([A-Za-z]+) on [A-Za-z]+, [A-Za-z]+ [0-9]{1,2}, [0-9]{4}"
+        );
+        require(captures.length >= 3, "invalid journey route");
+        booking.fromLocation = captures[1]; // Chennai
+        booking.toLocation = captures[2]; // Bangalore
+
+        // Extract travel date and time
+        captures = email.body.capture(
+            "([0-9]{2}/[0-9]{2}/[0-9]{4}), ([0-9]{2}:[0-9]{2} [A-Z]{2})"
+        );
+        require(captures.length >= 3, "invalid travel date");
+        booking.startDate = captures[1]; // 16/12/2024
+        booking.endDate = captures[1]; // Same day for bus travel
+        string memory departureTime = captures[2]; // Store for legacy event
+
+        // Extract passenger name
+        captures = email.body.capture("class=3D'liketext'> ([A-Za-z ]+)");
+        require(captures.length >= 2, "invalid passenger name");
+        booking.customerName = captures[1];
+
+        // Extract seat number
+        captures = email.body.capture('color: #d5585d;">\\s*([0-9]+)</p>');
+        require(captures.length >= 2, "invalid seat number");
+        booking.additionalInfo1 = captures[1];
+
+        // Extract price
+        captures = email.body.capture("Rs\\. ([0-9]+\\.[0-9]+)");
+        require(captures.length >= 2, "invalid price");
+        booking.price = captures[1];
+
+        // Extract bus operator
+        captures = email.body.capture(
+            'color: #47475d;font-family: roboto[^>]+">\\s*([A-Za-z]+) </div>'
+        );
+        require(captures.length >= 2, "invalid bus operator");
+        booking.provider = captures[1];
 
         // Emit standardized event
         emit BookingVerified(
             emailHash,
             msg.sender,
             BookingType.BUS,
-            fromCaptures[1],
-            ticketNumber,
-            departureCity,
-            arrivalCity,
-            travelDate,
-            travelDate,
-            passengerName,
-            price,
-            busOperator,
+            booking.fromDomain,
+            booking.bookingId,
+            booking.fromLocation,
+            booking.toLocation,
+            booking.startDate,
+            booking.endDate,
+            booking.customerName,
+            booking.price,
+            booking.provider,
             block.timestamp
         );
 
@@ -467,16 +436,16 @@ contract MapProver is Prover {
         emit BusVerified(
             emailHash,
             msg.sender,
-            fromCaptures[1],
-            ticketNumber,
-            pnrNumber,
-            departureCity,
-            arrivalCity,
-            travelDate,
-            passengerName,
-            seatNumber,
-            price,
-            busOperator,
+            booking.fromDomain,
+            booking.bookingId,
+            booking.additionalInfo2,
+            booking.fromLocation,
+            booking.toLocation,
+            booking.startDate,
+            booking.customerName,
+            booking.additionalInfo1,
+            booking.price,
+            booking.provider,
             departureTime,
             block.timestamp
         );
