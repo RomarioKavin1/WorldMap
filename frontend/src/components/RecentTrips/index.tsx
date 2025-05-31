@@ -1,14 +1,6 @@
 "use client";
 import { useState, useRef, useEffect, useCallback } from "react";
-
-interface Trip {
-  id: string;
-  destination: string;
-  country: string;
-  dates: string;
-  image: string;
-  flag: string;
-}
+import { Trip, TripData } from "./Trip";
 
 type DrawerState = "collapsed" | "partial" | "expanded";
 
@@ -19,57 +11,75 @@ export const RecentTrips: React.FC = () => {
   const [dragOffset, setDragOffset] = useState(0);
   const drawerRef = useRef<HTMLDivElement>(null);
 
-  // Mock data - replace with real data later
-  const recentTrips: Trip[] = [
+  // Updated mock data with new structure
+  const recentTrips: TripData[] = [
     {
       id: "1",
-      destination: "Tokyo",
-      country: "Japan",
-      dates: "Dec 2024",
-      image: "🗼",
-      flag: "🇯🇵",
+      fromCountry: "USA",
+      toCountry: "Japan",
+      fromFlag: "🇺🇸",
+      toFlag: "🇯🇵",
+      date: "Dec 2024",
+      travelType: "flight",
+      icon: "🗼",
     },
     {
       id: "2",
-      destination: "Paris",
-      country: "France",
-      dates: "Nov 2024",
-      image: "🗼",
-      flag: "🇫🇷",
+      fromCountry: "Japan",
+      toCountry: "France",
+      fromFlag: "🇯🇵",
+      toFlag: "🇫🇷",
+      date: "Nov 2024",
+      travelType: "flight",
+      icon: "🗼",
     },
     {
       id: "3",
-      destination: "New York",
-      country: "USA",
-      dates: "Oct 2024",
-      image: "🏙️",
-      flag: "🇺🇸",
+      fromCountry: "France",
+      toCountry: "USA",
+      fromFlag: "🇫🇷",
+      toFlag: "🇺🇸",
+      date: "Oct 2024",
+      travelType: "flight",
+      icon: "🏙️",
     },
     {
       id: "4",
-      destination: "London",
-      country: "UK",
-      dates: "Sep 2024",
-      image: "🏰",
-      flag: "🇬🇧",
+      fromCountry: "USA",
+      toCountry: "UK",
+      fromFlag: "🇺🇸",
+      toFlag: "🇬🇧",
+      date: "Sep 2024",
+      travelType: "car",
+      icon: "🏰",
     },
     {
       id: "5",
-      destination: "Sydney",
-      country: "Australia",
-      dates: "Aug 2024",
-      image: "🏙️",
-      flag: "🇦🇺",
+      fromCountry: "UK",
+      toCountry: "Australia",
+      fromFlag: "🇬🇧",
+      toFlag: "🇦🇺",
+      date: "Aug 2024",
+      travelType: "flight",
+      icon: "🏙️",
     },
     {
       id: "6",
-      destination: "Dubai",
-      country: "UAE",
-      dates: "Jul 2024",
-      image: "🏢",
-      flag: "🇦🇪",
+      fromCountry: "Australia",
+      toCountry: "UAE",
+      fromFlag: "🇦🇺",
+      toFlag: "🇦🇪",
+      date: "Jul 2024",
+      travelType: "boat",
+      icon: "🏢",
     },
   ];
+
+  // Handle trip click
+  const handleTripClick = (trip: TripData) => {
+    console.log("Trip clicked:", trip);
+    // Add your trip click logic here
+  };
 
   // Drawer positions (from bottom)
   const getDrawerPosition = () => {
@@ -274,41 +284,7 @@ export const RecentTrips: React.FC = () => {
             >
               <div className="space-y-4">
                 {recentTrips.map((trip) => (
-                  <div
-                    key={trip.id}
-                    className="bg-white/5 backdrop-opacity-20 backdrop-blur-sm rounded-2xl p-4 border border-white/10 hover:bg-white/10 transition-all duration-200 cursor-pointer"
-                  >
-                    <div className="flex items-center space-x-4">
-                      <div className="w-12 h-12 bg-gradient-to-br from-blue-500/20 to-purple-500/20 rounded-xl flex items-center justify-center text-2xl">
-                        {trip.image}
-                      </div>
-
-                      <div className="flex-1">
-                        <div className="flex items-center space-x-2">
-                          <h3 className="text-white font-semibold">
-                            {trip.destination}
-                          </h3>
-                          <span className="text-lg">{trip.flag}</span>
-                        </div>
-                        <p className="text-white/60 text-sm">
-                          {trip.country} • {trip.dates}
-                        </p>
-                      </div>
-
-                      <div className="text-white/40">
-                        <svg
-                          width="20"
-                          height="20"
-                          viewBox="0 0 24 24"
-                          fill="none"
-                          stroke="currentColor"
-                          strokeWidth="2"
-                        >
-                          <path d="m9 18 6-6-6-6" />
-                        </svg>
-                      </div>
-                    </div>
-                  </div>
+                  <Trip key={trip.id} trip={trip} onClick={handleTripClick} />
                 ))}
               </div>
 
@@ -337,7 +313,12 @@ export const RecentTrips: React.FC = () => {
                     </div>
                     <div className="bg-white/5 rounded-xl p-4 text-center">
                       <div className="text-2xl font-bold text-green-400">
-                        {new Set(recentTrips.map((t) => t.country)).size}
+                        {
+                          new Set([
+                            ...recentTrips.map((t) => t.fromCountry),
+                            ...recentTrips.map((t) => t.toCountry),
+                          ]).size
+                        }
                       </div>
                       <div className="text-white/60 text-sm">Countries</div>
                     </div>
