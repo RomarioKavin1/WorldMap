@@ -20,20 +20,47 @@ import {
   IconExternalLink,
   IconCopyCheck,
 } from "@tabler/icons-react";
+import { auth } from "@/auth";
 
 export default function ProfilePage() {
   const [isLoaded, setIsLoaded] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [copied, setCopied] = useState(false);
+  const [session, setSession] = useState<any>(null);
+  const [isLoadingSession, setIsLoadingSession] = useState(true);
 
+  // Fetch session data on component mount
   useEffect(() => {
+    const loadSession = async () => {
+      try {
+        setIsLoadingSession(true);
+        // Use the same API route as Header component
+        const response = await fetch("/api/auth/session");
+        if (response.ok) {
+          const sessionData = await response.json();
+          setSession(sessionData);
+        } else {
+          setSession(null);
+        }
+      } catch (error) {
+        console.error("Error loading session:", error);
+        setSession(null);
+      } finally {
+        setIsLoadingSession(false);
+      }
+    };
+
+    loadSession();
     setIsLoaded(true);
   }, []);
 
-  // Mock web3 user data
+  // Mock web3 user data with fallback
   const userData = {
-    address: "0x742d35Cc6C2bC5C1D8a87d2dC5C9F2d9D1e4A8B3",
-    ensName: "traveler.eth",
+    address:
+      session?.user?.username ||
+      session?.user?.address ||
+      "0x742d35Cc6C2bC5C1D8a87d2dC5C9F2d9D1e4A8B3",
+    ensName: session?.user?.username || "traveler.eth",
     chainId: 1,
     network: "Ethereum",
     connectedSince: "March 2024",
@@ -54,7 +81,10 @@ export default function ProfilePage() {
     setTimeout(() => setCopied(false), 2000);
   };
 
-  const formatAddress = (address: string) => {
+  const formatAddress = (address?: string) => {
+    if (!address || address.length < 10) {
+      return "0x000...0000"; // Fallback for invalid/short addresses
+    }
     return `${address.slice(0, 6)}...${address.slice(-4)}`;
   };
 
@@ -126,7 +156,11 @@ export default function ProfilePage() {
               <div className="flex-1">
                 <div className="flex items-center gap-2 mb-1">
                   <h2 className="text-xl font-semibold text-white">
-                    {formatAddress(userData.address)}
+                    {isLoadingSession ? (
+                      <div className="h-6 w-32 bg-white/20 rounded animate-pulse" />
+                    ) : (
+                      formatAddress(userData.address)
+                    )}
                   </h2>
                   <div
                     className="w-6 h-6 bg-white/10 rounded-lg flex items-center justify-center cursor-pointer"
