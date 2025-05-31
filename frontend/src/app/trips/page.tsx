@@ -18,6 +18,12 @@ import {
   Tooltip,
 } from "recharts";
 import { motion } from "framer-motion";
+import {
+  IconBed,
+  IconCalendar,
+  IconGlobe,
+  IconPlaneDeparture,
+} from "@tabler/icons-react";
 
 export default function TripsPage() {
   // Animation states
@@ -258,8 +264,8 @@ export default function TripsPage() {
                           {totalTrips}
                         </div>
                         <div className="text-white/60 text-sm">Total Trips</div>
-                        <div className="text-white/40 text-xs mt-1">
-                          ✈️ Adventures
+                        <div className="text-white/40 text-xs mt-1 flex items-center justify-center gap-1">
+                          <IconPlaneDeparture size={14} /> Adventures
                         </div>
                       </div>
                       <div className="text-center">
@@ -267,8 +273,8 @@ export default function TripsPage() {
                           {uniqueCountries}
                         </div>
                         <div className="text-white/60 text-sm">Countries</div>
-                        <div className="text-white/40 text-xs mt-1">
-                          🌍 Explored
+                        <div className="text-white/40 text-xs mt-1 flex items-center justify-center gap-1">
+                          <IconGlobe size={14} /> Explored
                         </div>
                       </div>
                       <div className="text-center">
@@ -276,8 +282,8 @@ export default function TripsPage() {
                           {totalStays}
                         </div>
                         <div className="text-white/60 text-sm">Total Stays</div>
-                        <div className="text-white/40 text-xs mt-1">
-                          🏠 Nights
+                        <div className="text-white/40 text-xs mt-1 flex items-center justify-center gap-1">
+                          <IconBed size={14} /> Nights
                         </div>
                       </div>
                       <div className="text-center">
@@ -285,8 +291,9 @@ export default function TripsPage() {
                           {thisYearTrips}
                         </div>
                         <div className="text-white/60 text-sm">This Year</div>
-                        <div className="text-white/40 text-xs mt-1">
-                          📅 Recent
+                        <div className="text-white/40 text-xs mt-1 flex items-center justify-center gap-1">
+                          <IconCalendar size={14} />
+                          Recent
                         </div>
                       </div>
                     </div>
