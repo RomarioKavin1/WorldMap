@@ -57,11 +57,12 @@ export default function ProfilePage() {
 
   // Mock web3 user data with fallback
   const userData = {
-    address:
-      session?.user?.address || "0x742d35Cc6C2bC5C1D8a87d2dC5C9F2d9D1e4A8B3",
-    ensName: session?.user?.username || "traveler.eth",
+    address: session?.user?.id || "...",
+    ensName: session?.user?.username || "...",
     chainId: 1,
   };
+  const user = session?.user;
+  console.log("User", user);
 
   // Mock stats
   const userStats = {
