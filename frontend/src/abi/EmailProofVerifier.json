@@ -1,0 +1,109 @@
+{
+  "abi": [
+    {
+      "type": "constructor",
+      "inputs": [
+        {
+          "name": "_prover",
+          "type": "address",
+          "internalType": "address"
+        }
+      ],
+      "stateMutability": "nonpayable"
+    },
+    {
+      "type": "function",
+      "name": "verify",
+      "inputs": [
+        {
+          "name": "",
+          "type": "tuple",
+          "internalType": "struct Proof",
+          "components": [
+            {
+              "name": "seal",
+              "type": "tuple",
+              "internalType": "struct Seal",
+              "components": [
+                {
+                  "name": "verifierSelector",
+                  "type": "bytes4",
+                  "internalType": "bytes4"
+                },
+                {
+                  "name": "seal",
+                  "type": "bytes32[8]",
+                  "internalType": "bytes32[8]"
+                },
+                {
+                  "name": "mode",
+                  "type": "uint8",
+                  "internalType": "enum ProofMode"
+                }
+              ]
+            },
+            {
+              "name": "callGuestId",
+              "type": "bytes32",
+              "internalType": "bytes32"
+            },
+            {
+              "name": "length",
+              "type": "uint256",
+              "internalType": "uint256"
+            },
+            {
+              "name": "callAssumptions",
+              "type": "tuple",
+              "internalType": "struct CallAssumptions",
+              "components": [
+                {
+                  "name": "proverContractAddress",
+                  "type": "address",
+                  "internalType": "address"
+                },
+                {
+                  "name": "functionSelector",
+                  "type": "bytes4",
+                  "internalType": "bytes4"
+                },
+                {
+                  "name": "settleChainId",
+                  "type": "uint256",
+                  "internalType": "uint256"
+                },
+                {
+                  "name": "settleBlockNumber",
+                  "type": "uint256",
+                  "internalType": "uint256"
+                },
+                {
+                  "name": "settleBlockHash",
+                  "type": "bytes32",
+                  "internalType": "bytes32"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "_emailHash",
+          "type": "bytes32",
+          "internalType": "bytes32"
+        },
+        {
+          "name": "_targetWallet",
+          "type": "address",
+          "internalType": "address"
+        },
+        {
+          "name": "_emailDomain",
+          "type": "string",
+          "internalType": "string"
+        }
+      ],
+      "outputs": [],
+      "stateMutability": "nonpayable"
+    }
+  ]
+}
