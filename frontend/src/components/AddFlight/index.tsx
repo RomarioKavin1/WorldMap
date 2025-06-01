@@ -7,10 +7,12 @@ import {
   IconAlertCircle,
   IconLoader,
   IconX,
+  IconLock,
 } from "@tabler/icons-react";
 
 interface AddFlightProps {
   onFlightAdded?: () => void;
+  isVerified?: boolean;
 }
 
 interface LoadingState {
@@ -18,7 +20,10 @@ interface LoadingState {
   processing: boolean;
 }
 
-const AddFlight: React.FC<AddFlightProps> = ({ onFlightAdded }) => {
+const AddFlight: React.FC<AddFlightProps> = ({
+  onFlightAdded,
+  isVerified = false,
+}) => {
   const [emlFile, setEmlFile] = useState<File | null>(null);
   const [loading, setLoading] = useState<LoadingState>({
     uploading: false,
@@ -28,6 +33,8 @@ const AddFlight: React.FC<AddFlightProps> = ({ onFlightAdded }) => {
   const [error, setError] = useState<string | null>(null);
 
   const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (!isVerified) return;
+
     const file = event.target.files?.[0];
     if (file && file.name.endsWith(".eml")) {
       setEmlFile(file);
@@ -38,7 +45,7 @@ const AddFlight: React.FC<AddFlightProps> = ({ onFlightAdded }) => {
   };
 
   const addVerifiedFlight = async () => {
-    if (!emlFile) {
+    if (!emlFile || !isVerified) {
       setError("Please select an EML file first");
       return;
     }
@@ -94,6 +101,24 @@ const AddFlight: React.FC<AddFlightProps> = ({ onFlightAdded }) => {
     const i = Math.floor(Math.log(bytes) / Math.log(k));
     return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + " " + sizes[i];
   };
+
+  // Show verification required message if not verified
+  if (!isVerified) {
+    return (
+      <div className="space-y-6">
+        <div className="text-center py-8">
+          <div className="w-16 h-16 bg-gradient-to-br from-orange-500/20 to-yellow-500/20 rounded-full flex items-center justify-center mx-auto mb-4">
+            <IconLock size={28} className="text-orange-400" />
+          </div>
+          <h3 className="text-white font-medium mb-2">Verification Required</h3>
+          <p className="text-white/60 text-sm">
+            Please complete humanity verification above to upload flight
+            confirmations.
+          </p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6">
