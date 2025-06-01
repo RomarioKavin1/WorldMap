@@ -41,6 +41,7 @@ export default function GlobePage() {
   const [error, setError] = useState<string | null>(null);
   const [selectedTrip, setSelectedTrip] = useState<TripData | null>(null);
   const [isLoaded, setIsLoaded] = useState(false);
+  const [trips, setTrips] = useState<TripData[]>([]);
 
   // Add useMerits hook
   const {
@@ -185,43 +186,43 @@ export default function GlobePage() {
     return coordinateArrays;
   };
 
-  // Convert trip data to coordinates on component mount
+  // Load trips from localStorage
+  useEffect(() => {
+    const loadTrips = () => {
+      const stored = localStorage.getItem("trips");
+      if (stored) {
+        setTrips(JSON.parse(stored));
+      } else {
+        setTrips([]);
+      }
+    };
+    loadTrips();
+    window.addEventListener("storage", loadTrips);
+    return () => window.removeEventListener("storage", loadTrips);
+  }, []);
+
+  // Convert trip data to coordinates on component mount and when trips change
   useEffect(() => {
     const loadCoordinates = async () => {
       try {
         setIsLoading(true);
         setError(null);
-
-        // Check if API key is available
-        if (
-          !GOOGLE_MAPS_API_KEY ||
-          GOOGLE_MAPS_API_KEY === "YOUR_API_KEY_HERE"
-        ) {
-          console.warn("Google Maps API key not found. Using sample data.");
+        if (!GOOGLE_MAPS_API_KEY || GOOGLE_MAPS_API_KEY === "YOUR_API_KEY_HERE") {
           setArcPaths(sampleArcPaths);
           setIsLoading(false);
           return;
         }
-
-        const coordinates = await convertTripDataToCoordinates(recentTrips);
-
-        if (coordinates.length > 0) {
-          setArcPaths(coordinates);
-        } else {
-          // Fallback to sample data if no coordinates were generated
-          setArcPaths(sampleArcPaths);
-        }
+        const coordinates = await convertTripDataToCoordinates(trips.length ? trips : recentTrips);
+        setArcPaths(coordinates.length > 0 ? coordinates : sampleArcPaths);
       } catch (err) {
-        console.error("Error loading coordinates:", err);
         setError("Failed to load trip coordinates. Using sample data.");
         setArcPaths(sampleArcPaths);
       } finally {
         setIsLoading(false);
       }
     };
-
     loadCoordinates();
-  }, []);
+  }, [trips]);
 
   return (
     <div className="min-h-screen bg-black text-white flex flex-col relative">
@@ -261,7 +262,7 @@ export default function GlobePage() {
         />
       </div>
       {/* Pull-up Drawer */}
-      <RecentTrips trips={recentTrips} stays={recentStays} />
+      <RecentTrips trips={trips.length ? trips : recentTrips} stays={recentStays} />
 
       {/* Bottom Navigation */}
       <BottomNav activeTab="globe" />

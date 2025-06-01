@@ -9,9 +9,10 @@ import {
   IconX,
   IconLock,
 } from "@tabler/icons-react";
+import { TripData } from "../RecentTrips/Trip";
 
 interface AddFlightProps {
-  onFlightAdded?: () => void;
+  onFlightAdded?: (trip: TripData) => void;
   isVerified?: boolean;
 }
 
@@ -74,9 +75,22 @@ const AddFlight: React.FC<AddFlightProps> = ({
       }
 
       setResult(
-        `Flight verification successful! Transaction hash: ${data.transactionHash}`
+        `Flight verification successful! Transaction hash: <a href='${data.explorerUrl}' target='_blank' rel='noopener noreferrer' class='underline text-blue-400'>${data.transactionHash}</a>`
       );
-      onFlightAdded?.();
+      // Add to localStorage
+      const newTrip: TripData & { transactionHash: string; explorerUrl: string } = {
+        id: Date.now().toString(),
+        fromCountry: "USA", // TODO: Parse from email or let user select
+        toCountry: "Japan", // TODO: Parse from email or let user select
+        date: new Date().toLocaleDateString(),
+        travelType: "flight",
+        transactionHash: data.transactionHash,
+        explorerUrl: data.explorerUrl,
+      };
+      const trips = JSON.parse(localStorage.getItem("trips") || "[]");
+      trips.push(newTrip);
+      localStorage.setItem("trips", JSON.stringify(trips));
+      onFlightAdded?.(newTrip);
     } catch (err) {
       setError(
         err instanceof Error ? err.message : "An unknown error occurred"
@@ -135,11 +149,10 @@ const AddFlight: React.FC<AddFlightProps> = ({
           />
           <label
             htmlFor="flight-upload"
-            className={`block border-2 border-dashed rounded-xl p-6 text-center transition-all duration-300 ${
-              isLoading
-                ? "border-white/20 bg-white/5 cursor-not-allowed opacity-50"
-                : "border-white/30 bg-white/5 hover:bg-white/10 hover:border-blue-500/50 cursor-pointer"
-            }`}
+            className={`block border-2 border-dashed rounded-xl p-6 text-center transition-all duration-300 ${isLoading
+              ? "border-white/20 bg-white/5 cursor-not-allowed opacity-50"
+              : "border-white/30 bg-white/5 hover:bg-white/10 hover:border-blue-500/50 cursor-pointer"
+              }`}
           >
             <div className="flex flex-col items-center space-y-3">
               <div className="w-12 h-12 bg-gradient-to-br from-blue-500/20 to-cyan-500/20 rounded-lg flex items-center justify-center">
@@ -190,11 +203,10 @@ const AddFlight: React.FC<AddFlightProps> = ({
       <button
         onClick={addVerifiedFlight}
         disabled={!emlFile || isLoading}
-        className={`w-full py-4 px-6 rounded-xl font-medium transition-all duration-300 ${
-          !emlFile || isLoading
-            ? "bg-white/10 text-white/40 cursor-not-allowed"
-            : "bg-gradient-to-r from-blue-500/20 to-cyan-500/20 hover:from-blue-500/30 hover:to-cyan-500/30 text-white border border-blue-500/30 hover:border-blue-500/50"
-        }`}
+        className={`w-full py-4 px-6 rounded-xl font-medium transition-all duration-300 ${!emlFile || isLoading
+          ? "bg-white/10 text-white/40 cursor-not-allowed"
+          : "bg-gradient-to-r from-blue-500/20 to-cyan-500/20 hover:from-blue-500/30 hover:to-cyan-500/30 text-white border border-blue-500/30 hover:border-blue-500/50"
+          }`}
       >
         <div className="flex items-center justify-center gap-2">
           {isLoading ? (
@@ -280,7 +292,7 @@ const AddFlight: React.FC<AddFlightProps> = ({
               <p className="text-white font-medium mb-1">
                 Flight Verified Successfully!
               </p>
-              <p className="text-green-400 text-sm">{result}</p>
+              <p className="text-green-400 text-sm" dangerouslySetInnerHTML={{ __html: result }} />
             </div>
             <button
               onClick={() => setResult(null)}

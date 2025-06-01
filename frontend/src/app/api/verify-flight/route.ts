@@ -35,15 +35,15 @@ export async function POST(request: NextRequest) {
     await new Promise((resolve) => setTimeout(resolve, 2000));
 
     // Mock successful response
-    const mockTransactionHash = `0x${Math.random()
-      .toString(16)
-      .substring(2)}${Math.random().toString(16).substring(2)}`;
+    const mockTransactionHash =
+      "0x466b69a6d1cca7f3efd4766d7f2e74e8f3758f09349358ebf4e9aede3571e82e";
 
     console.log("✅ Flight verification completed successfully");
 
     return NextResponse.json({
       success: true,
       transactionHash: mockTransactionHash,
+      explorerUrl: `https://worldscan.org/tx/${mockTransactionHash}`,
       message: "Flight verification completed successfully",
     });
   } catch (error) {

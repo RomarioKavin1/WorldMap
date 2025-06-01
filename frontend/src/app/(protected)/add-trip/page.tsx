@@ -148,11 +148,10 @@ export default function AddTripPage() {
         <div className="fixed top-20 right-4 z-50">
           <button
             onClick={() => setDevMode(!devMode)}
-            className={`flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-medium transition-all duration-300 ${
-              devMode
-                ? "bg-orange-500/20 border border-orange-500/30 text-orange-400"
-                : "bg-white/5 border border-white/10 text-white/60 hover:bg-white/10"
-            }`}
+            className={`flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-medium transition-all duration-300 ${devMode
+              ? "bg-orange-500/20 border border-orange-500/30 text-orange-400"
+              : "bg-white/5 border border-white/10 text-white/60 hover:bg-white/10"
+              }`}
           >
             <IconSettings size={14} />
             <span>DEV</span>
@@ -208,11 +207,10 @@ export default function AddTripPage() {
                 <button
                   onClick={handleVerifyHumanity}
                   disabled={verificationState === "pending"}
-                  className={`w-full max-w-sm mx-auto py-4 px-8 rounded-xl font-semibold text-lg transition-all duration-300 ${
-                    verificationState === "pending"
-                      ? "bg-white/10 text-white/40 cursor-not-allowed"
-                      : "bg-gradient-to-r from-blue-500/20 to-purple-500/20 hover:from-blue-500/30 hover:to-purple-500/30 text-white hover:scale-[1.02] active:scale-[0.98]"
-                  }`}
+                  className={`w-full max-w-sm mx-auto py-4 px-8 rounded-xl font-semibold text-lg transition-all duration-300 ${verificationState === "pending"
+                    ? "bg-white/10 text-white/40 cursor-not-allowed"
+                    : "bg-gradient-to-r from-blue-500/20 to-purple-500/20 hover:from-blue-500/30 hover:to-purple-500/30 text-white hover:scale-[1.02] active:scale-[0.98]"
+                    }`}
                 >
                   <div className="flex items-center justify-center gap-3">
                     {verificationState === "pending" ? (
@@ -357,13 +355,11 @@ export default function AddTripPage() {
                     initial={{ opacity: 0, x: -20 }}
                     animate={isLoaded ? { opacity: 1, x: 0 } : {}}
                     transition={{ duration: 0.5, delay: 0.4 + index * 0.1 }}
-                    className={`bg-white/5 backdrop-blur-xl rounded-2xl p-4 border ${
-                      option.available ? option.borderColor : "border-white/10"
-                    } ${
-                      option.available
+                    className={`bg-white/5 backdrop-blur-xl rounded-2xl p-4 border ${option.available ? option.borderColor : "border-white/10"
+                      } ${option.available
                         ? "cursor-pointer hover:bg-white/10"
                         : "cursor-not-allowed opacity-50"
-                    } transition-all duration-300`}
+                      } transition-all duration-300`}
                   >
                     <div className="flex items-center gap-4">
                       <div
