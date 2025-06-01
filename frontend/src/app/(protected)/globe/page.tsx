@@ -6,6 +6,17 @@ import { Header } from "@/components/Header";
 import { StayData } from "@/components/RecentTrips/Stay";
 import { TripData } from "@/components/RecentTrips/Trip";
 import { useState, useEffect } from "react";
+import { motion } from "framer-motion";
+import {
+  IconMapPin,
+  IconGlobe,
+  IconUsers,
+  IconTrendingUp,
+  IconCalendar,
+  IconBed,
+  IconPlaneDeparture,
+} from "@tabler/icons-react";
+import { useMerits } from "@/contexts/MeritsContext";
 
 interface Coordinates {
   lat: number;
@@ -28,6 +39,15 @@ export default function GlobePage() {
   const [arcPaths, setArcPaths] = useState<Coordinates[][]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [selectedTrip, setSelectedTrip] = useState<TripData | null>(null);
+  const [isLoaded, setIsLoaded] = useState(false);
+
+  // Add useMerits hook
+  const {
+    isConnected: isMeritsConnected,
+    isInitialized: isMeritsInitialized,
+    balance: meritsBalance,
+  } = useMerits();
 
   // Replace with your actual Google Maps API key
   const GOOGLE_MAPS_API_KEY =
@@ -206,7 +226,14 @@ export default function GlobePage() {
   return (
     <div className="min-h-screen bg-black text-white flex flex-col relative">
       {/* Header */}
-      <Header />
+      <Header
+        isMeritsConnected={isMeritsInitialized && isMeritsConnected}
+        meritsBalance={
+          isMeritsInitialized && isMeritsConnected && meritsBalance
+            ? meritsBalance.total
+            : undefined
+        }
+      />
 
       {/* Loading indicator */}
       {isLoading && (

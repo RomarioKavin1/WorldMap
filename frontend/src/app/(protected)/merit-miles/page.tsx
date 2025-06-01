@@ -19,7 +19,7 @@ import {
   IconLogin,
   IconLogout,
 } from "@tabler/icons-react";
-import { useMerits } from "@/hooks/useMerits";
+import { useMerits } from "@/contexts/MeritsContext";
 import { MiniKit, SignMessageInput } from "@worldcoin/minikit-js";
 
 declare global {
@@ -49,10 +49,20 @@ export default function MeritMilesPage() {
     isConnected: isMeritsConnected,
     isLoading: isMeritsLoading,
     userInfo,
+    balance: meritsBalance,
     error: meritsError,
     loginWithSIWE: meritsLoginWithSIWE,
     logout: meritsLogout,
+    isInitialized: isMeritsInitialized,
   } = useMerits();
+
+  // Debug logging for Merits state
+  console.log("Merit-miles page - Merits state:", {
+    isConnected: isMeritsConnected,
+    isInitialized: isMeritsInitialized,
+    hasBalance: !!meritsBalance,
+    balanceTotal: meritsBalance?.total,
+  });
 
   useEffect(() => {
     const loadSession = async () => {
@@ -413,7 +423,15 @@ Expiration Time: ${expirationTime}`;
   return (
     <div className="min-h-screen bg-black text-white flex flex-col relative">
       {/* Header */}
-      <Header showMeritModal={false} />
+      <Header
+        showMeritModal={false}
+        isMeritsConnected={isMeritsInitialized && isMeritsConnected}
+        meritsBalance={
+          isMeritsInitialized && isMeritsConnected && meritsBalance
+            ? meritsBalance.total
+            : undefined
+        }
+      />
 
       {/* Content */}
       <div className="flex-1 p-4 mt-12 pb-20">
@@ -448,8 +466,8 @@ Expiration Time: ${expirationTime}`;
             <div className="text-center">
               <p className="text-white/60 text-sm">Current Balance</p>
               <p className="text-4xl font-extralight text-white tracking-tight">
-                {isMeritsConnected && userInfo?.exists
-                  ? userInfo.user?.total_balance || "0"
+                {isMeritsConnected && meritsBalance
+                  ? meritsBalance.total || "0"
                   : "0"}
               </p>
               <p className="text-white/40 text-xs">Merit Miles</p>
@@ -458,7 +476,14 @@ Expiration Time: ${expirationTime}`;
 
           {/* Merits Connection Status */}
           <div className="border-t border-white/10 pt-6">
-            {!isMeritsConnected ? (
+            {!isMeritsInitialized ? (
+              <div className="text-center">
+                <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-white/40 mx-auto mb-3"></div>
+                <p className="text-white/60 text-sm">
+                  Checking Merits connection...
+                </p>
+              </div>
+            ) : !isMeritsConnected ? (
               <div className="text-center">
                 <p className="text-white/60 text-sm mb-4">
                   Connect to Blockscout Merits to view your balance

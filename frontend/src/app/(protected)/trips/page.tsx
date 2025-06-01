@@ -24,11 +24,21 @@ import {
   IconGlobe,
   IconPlaneDeparture,
 } from "@tabler/icons-react";
+import { useMerits } from "@/contexts/MeritsContext";
+import { useRouter } from "next/navigation";
 
 export default function TripsPage() {
   // Animation states
   const [isLoaded, setIsLoaded] = useState(false);
   const [currentSlide, setCurrentSlide] = useState(0);
+  const router = useRouter();
+
+  // Add useMerits hook
+  const {
+    isConnected: isMeritsConnected,
+    isInitialized: isMeritsInitialized,
+    balance: meritsBalance,
+  } = useMerits();
 
   useEffect(() => {
     setIsLoaded(true);
@@ -219,7 +229,14 @@ export default function TripsPage() {
   return (
     <div className="min-h-screen bg-black text-white flex flex-col relative">
       {/* Header */}
-      <Header />
+      <Header
+        isMeritsConnected={isMeritsInitialized && isMeritsConnected}
+        meritsBalance={
+          isMeritsInitialized && isMeritsConnected && meritsBalance
+            ? meritsBalance.total
+            : undefined
+        }
+      />
 
       {/* Content */}
       <div className="flex-1 p-4 mt-12 pb-20">

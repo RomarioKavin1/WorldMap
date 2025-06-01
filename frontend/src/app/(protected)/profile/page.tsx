@@ -22,6 +22,7 @@ import { RegisterButton } from "@/components/RegisterButton";
 import { Marble } from "@worldcoin/mini-apps-ui-kit-react";
 import { signOut } from "@/auth";
 import { useRouter } from "next/navigation";
+import { useMerits } from "@/contexts/MeritsContext";
 
 export default function ProfilePage() {
   const [isLoaded, setIsLoaded] = useState(false);
@@ -30,6 +31,14 @@ export default function ProfilePage() {
   const [session, setSession] = useState<any>(null);
   const [isLoadingSession, setIsLoadingSession] = useState(true);
   const router = useRouter();
+
+  // Add useMerits hook
+  const {
+    isConnected: isMeritsConnected,
+    isInitialized: isMeritsInitialized,
+    balance: meritsBalance,
+  } = useMerits();
+
   // Fetch session data on component mount
   useEffect(() => {
     const loadSession = async () => {
@@ -88,7 +97,14 @@ export default function ProfilePage() {
   return (
     <div className="min-h-screen bg-black text-white flex flex-col relative">
       {/* Header */}
-      <Header />
+      <Header
+        isMeritsConnected={isMeritsInitialized && isMeritsConnected}
+        meritsBalance={
+          isMeritsInitialized && isMeritsConnected && meritsBalance
+            ? meritsBalance.total
+            : undefined
+        }
+      />
 
       {/* Content */}
       <div className="flex-1 p-4 mt-12 pb-20">

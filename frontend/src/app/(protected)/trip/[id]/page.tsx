@@ -13,7 +13,18 @@ import {
   IconCalendar,
   IconMapPin,
   IconClock,
+  IconBed,
+  IconPhoto,
+  IconHeart,
+  IconShare,
+  IconEdit,
+  IconTrash,
+  IconGlobe,
+  IconUsers,
+  IconStar,
 } from "@tabler/icons-react";
+import Image from "next/image";
+import { useMerits } from "@/contexts/MeritsContext";
 
 interface Coordinates {
   lat: number;
@@ -35,7 +46,15 @@ interface GeocodeResponse {
 export default function TripDetailPage() {
   const params = useParams();
   const router = useRouter();
-  const tripId = params?.id as string;
+  const tripId = params.id as string;
+  const [isLoaded, setIsLoaded] = useState(false);
+
+  // Add useMerits hook
+  const {
+    isConnected: isMeritsConnected,
+    isInitialized: isMeritsInitialized,
+    balance: meritsBalance,
+  } = useMerits();
 
   const [tripData, setTripData] = useState<TripData | null>(null);
   const [fromCoords, setFromCoords] = useState<Coordinates | null>(null);
@@ -196,14 +215,22 @@ export default function TripDetailPage() {
     }
   }, [tripId]);
 
-  if (isLoading) {
+  // Loading state
+  if (!tripData) {
     return (
-      <div className="min-h-screen bg-black text-white flex flex-col">
-        <Header />
+      <div className="min-h-screen bg-black text-white flex flex-col relative">
+        <Header
+          isMeritsConnected={isMeritsInitialized && isMeritsConnected}
+          meritsBalance={
+            isMeritsInitialized && isMeritsConnected && meritsBalance
+              ? meritsBalance.total
+              : undefined
+          }
+        />
         <div className="flex-1 flex items-center justify-center">
           <div className="text-center">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-white mx-auto mb-4"></div>
-            <p>Loading trip details...</p>
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-white mx-auto mb-4"></div>
+            <p className="text-white/60">Loading trip details...</p>
           </div>
         </div>
         <BottomNav activeTab="trips" />
@@ -211,22 +238,35 @@ export default function TripDetailPage() {
     );
   }
 
-  if (error || !tripData || !fromCoords || !toCoords) {
+  // Trip not found
+  if (tripData.id === "not-found") {
     return (
-      <div className="min-h-screen bg-black text-white flex flex-col">
-        <Header />
-        <div className="flex-1 flex items-center justify-center">
-          <div className="text-center">
-            <div className="text-6xl mb-4">❌</div>
-            <h3 className="text-white/60 text-lg mb-2">Trip Not Found</h3>
-            <p className="text-white/40 text-sm mb-4">
-              {error || "The requested trip could not be loaded."}
+      <div className="min-h-screen bg-black text-white flex flex-col relative">
+        <Header
+          isMeritsConnected={isMeritsInitialized && isMeritsConnected}
+          meritsBalance={
+            isMeritsInitialized && isMeritsConnected && meritsBalance
+              ? meritsBalance.total
+              : undefined
+          }
+        />
+        <div className="flex-1 flex items-center justify-center p-4">
+          <div className="text-center max-w-sm">
+            <div className="w-24 h-24 bg-white/5 rounded-full flex items-center justify-center mx-auto mb-6">
+              <IconMapPin size={48} className="text-white/40" />
+            </div>
+            <h2 className="text-2xl font-bold text-white mb-2">
+              Trip Not Found
+            </h2>
+            <p className="text-white/60 mb-6">
+              The trip you're looking for doesn't exist or may have been
+              removed.
             </p>
             <button
-              onClick={() => router.back()}
-              className="px-4 py-2 bg-blue-600 hover:bg-blue-700 rounded-lg transition-colors"
+              onClick={() => router.push("/trips")}
+              className="bg-white/10 border border-white/20 text-white px-6 py-3 rounded-xl hover:bg-white/20 transition-colors"
             >
-              Go Back
+              Back to Trips
             </button>
           </div>
         </div>
@@ -235,10 +275,17 @@ export default function TripDetailPage() {
     );
   }
 
+  // Main trip detail view
   return (
     <div className="min-h-screen bg-black text-white flex flex-col relative">
-      {/* Header */}
-      <Header />
+      <Header
+        isMeritsConnected={isMeritsInitialized && isMeritsConnected}
+        meritsBalance={
+          isMeritsInitialized && isMeritsConnected && meritsBalance
+            ? meritsBalance.total
+            : undefined
+        }
+      />
 
       {/* Back Button */}
       <div className="absolute top-20 left-4 z-50">
@@ -253,12 +300,14 @@ export default function TripDetailPage() {
 
       {/* Globe Section */}
       <div className="h-[60vh] bg-black overflow-hidden mt-16 relative">
-        <ThreeGlobeSingle
-          fromCoords={fromCoords}
-          toCoords={toCoords}
-          autoRotate={true}
-          showAnimation={true}
-        />
+        {fromCoords && toCoords && (
+          <ThreeGlobeSingle
+            fromCoords={fromCoords}
+            toCoords={toCoords}
+            autoRotate={true}
+            showAnimation={true}
+          />
+        )}
       </div>
 
       {/* Trip Details Section */}

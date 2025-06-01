@@ -4,9 +4,12 @@ import { Logo } from "@/components/Logo";
 import Image from "next/image";
 import { Marble } from "@worldcoin/mini-apps-ui-kit-react";
 import { useRouter } from "next/navigation";
+import { IconExclamationMark } from "@tabler/icons-react";
 
 interface HeaderProps {
   showMeritModal?: boolean; // For pages like merit-miles where modal isn't needed
+  isMeritsConnected?: boolean;
+  meritsBalance?: string | number;
 }
 
 // Custom hook to get session data from client-side
@@ -40,10 +43,22 @@ const useSession = () => {
   return { session, isLoading };
 };
 
-export const Header = ({ showMeritModal = true }: HeaderProps) => {
+export const Header = ({
+  showMeritModal = true,
+  isMeritsConnected,
+  meritsBalance,
+}: HeaderProps) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const { session, isLoading } = useSession();
   const router = useRouter();
+
+  // Debug logging for Merits status
+  console.log(
+    "Header render - Merits connected:",
+    isMeritsConnected,
+    "Balance:",
+    meritsBalance
+  );
 
   return (
     <>
@@ -78,7 +93,13 @@ export const Header = ({ showMeritModal = true }: HeaderProps) => {
           }`}
           onClick={showMeritModal ? () => setIsModalOpen(true) : undefined}
         >
-          <span className="text-white text-sm font-semibold">0</span>
+          {isMeritsConnected ? (
+            <span className="text-white text-sm font-semibold">
+              {meritsBalance}
+            </span>
+          ) : (
+            <IconExclamationMark className="text-white w-4 h-4" />
+          )}
           <Image
             src="/blockscout_merit_icon.png"
             alt="Merit Miles"
