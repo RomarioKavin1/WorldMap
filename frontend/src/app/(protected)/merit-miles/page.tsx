@@ -20,26 +20,13 @@ import {
   IconLogout,
 } from "@tabler/icons-react";
 import { useMerits } from "@/contexts/MeritsContext";
-import { MiniKit, SignMessageInput } from "@worldcoin/minikit-js";
+import { MiniKit } from "@worldcoin/minikit-js";
 
 declare global {
   interface Window {
     ethereum?: any;
   }
 }
-export const createMeritsMessage = (address: string, nonce: string): string => {
-  const chainId = 1;
-  const domain = "merits-staging.blockscout.com";
-  const uri = "https://merits-staging.blockscout.com";
-  const version = "1";
-  const statement = "Sign-In for the Blockscout Merits program.";
-  const issuedAt = new Date().toISOString();
-  const expirationTime = new Date(
-    Date.now() + 365 * 24 * 60 * 60 * 1000
-  ).toISOString(); // 1 year
-
-  return `hi`;
-};
 
 export default function MeritMilesPage() {
   const [isLoaded, setIsLoaded] = useState(false);
