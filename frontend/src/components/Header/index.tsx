@@ -4,7 +4,7 @@ import { Logo } from "@/components/Logo";
 import Image from "next/image";
 import { Marble } from "@worldcoin/mini-apps-ui-kit-react";
 import { useRouter } from "next/navigation";
-import { IconExclamationMark } from "@tabler/icons-react";
+import { IconExclamationMark, IconMapExclamation } from "@tabler/icons-react";
 
 interface HeaderProps {
   showMeritModal?: boolean; // For pages like merit-miles where modal isn't needed
@@ -98,7 +98,7 @@ export const Header = ({
               {meritsBalance}
             </span>
           ) : (
-            <IconExclamationMark className="text-white w-4 h-4" />
+            <IconMapExclamation className="text-white w-4 h-4" />
           )}
           <Image
             src="/blockscout_merit_icon.png"
