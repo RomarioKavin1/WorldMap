@@ -2,6 +2,7 @@
 import { BottomNav } from "@/components/BottomNav";
 import { Header } from "@/components/Header";
 import { useMerits } from "@/contexts/MeritsContext";
+import AddFlight from "@/components/AddFlight";
 
 export default function AddTripPage() {
   // Add useMerits hook
@@ -31,6 +32,7 @@ export default function AddTripPage() {
           <h3 className="text-white/60 text-lg mb-2">
             Plan your next adventure
           </h3>
+          <AddFlight />
           <p className="text-white/40 text-sm">
             Trip planning features coming soon
           </p>

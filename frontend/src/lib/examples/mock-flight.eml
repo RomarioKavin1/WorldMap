@@ -1,0 +1,101 @@
+Delivered-To: fabianferno@gmail.com
+Received: by 2002:a05:612c:471a:b0:4d5:121f:65f3 with SMTP id lx26csp1903780vqb;
+        Sat, 31 May 2025 16:34:31 -0700 (PDT)
+X-Received: by 2002:a17:907:7e96:b0:ad8:85df:865b with SMTP id a640c23a62f3a-adb322fcebbmr789768866b.33.1748734471088;
+        Sat, 31 May 2025 16:34:31 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1748734471; cv=none;
+        d=google.com; s=arc-20240605;
+        b=AbMAChUfpEVGbS/+Uif6gpq0c1NRqnB8xFWrKd+bRyerV1SteweRqURFKOAn0CQt64
+         KnQWgfPHyXHKfPKmqyCmj7ng8FDjKwI0bKTj6pv6swYTTH35JV2usVnGNX7spxPjX8l/
+         aM9Gt4jY/xhICViM+GFv605ra19PQTgij9YKYmCX2YS/L1EVU1i7IsKIR/W9CVKphPxS
+         8XiXzZLzQG1hYOjJnuKeamqeXL3cOwAPat0nxORUxp3deWCTpqPT6RkLsJBmh5IPvlKQ
+         IvpVv/Ry404dMRNgI7GjI0Z155z0lFm4zKk4NuYfX0EXz8YyfLEH9wxfAtBWYkv7ZoIA
+         khmg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=to:subject:message-id:date:from:mime-version:dkim-signature;
+        bh=DjXvAWR52Ui8HS6ga043s670E5nTXsgHCrL7uAGlNuk=;
+        fh=u5PHkLnRFWD6Za5C6QWOlDEEtSIc3ovMM8zz1tpvMTY=;
+        b=HaveTPgV00BESxnqsZCJrqvmCktQdqqzYENuTcspbI8rmXbcuVBPkrchjjW0rZrEm9
+         +4IvTB5/DXamk52urbmhJ7bpAVw8fffr/nzV2+q8I+NVtReyKoFSzCwJdS/vMk4LH3B/
+         RQubfolB7//Cd/IIMsKuNnww0tHu+gU2IV2djiYMNjzrwWFn48AwUD8+CO41oozoaHVW
+         rBjcUDnYjOXdCM8Aa6iv8SmtY0Sm/8lgdZlhiGUZsd3fkUBrkY4KWhd/5R2DAeTEbChT
+         R6BngbHYbl3UfLCXRxKSdXRnuc0SXHtYjNll+5EigAO0JQd9z1wKzMXyd1WMrZwqCkOE
+         clIg==;
+        dara=google.com
+ARC-Authentication-Results: i=1; mx.google.com;
+       dkim=pass header.i=@gmail.com header.s=20230601 header.b=Pg4gSmuK;
+       spf=pass (google.com: domain of silasashar3@gmail.com designates 209.85.220.65 as permitted sender) smtp.mailfrom=silasashar3@gmail.com;
+       dmarc=pass (p=NONE sp=QUARANTINE dis=NONE) header.from=gmail.com;
+       dara=pass header.i=@gmail.com
+Return-Path: <silasashar3@gmail.com>
+Received: from mail-sor-f65.google.com (mail-sor-f65.google.com. [209.85.220.65])
+        by mx.google.com with SMTPS id a640c23a62f3a-adabeee0781sor271822466b.17.2025.05.31.16.34.30
+        for <fabianferno@gmail.com>
+        (Google Transport Security);
+        Sat, 31 May 2025 16:34:31 -0700 (PDT)
+Received-SPF: pass (google.com: domain of silasashar3@gmail.com designates 209.85.220.65 as permitted sender) client-ip=209.85.220.65;
+Authentication-Results: mx.google.com;
+       dkim=pass header.i=@gmail.com header.s=20230601 header.b=Pg4gSmuK;
+       spf=pass (google.com: domain of silasashar3@gmail.com designates 209.85.220.65 as permitted sender) smtp.mailfrom=silasashar3@gmail.com;
+       dmarc=pass (p=NONE sp=QUARANTINE dis=NONE) header.from=gmail.com;
+       dara=pass header.i=@gmail.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1748734470; x=1749339270; dara=google.com;
+        h=to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=DjXvAWR52Ui8HS6ga043s670E5nTXsgHCrL7uAGlNuk=;
+        b=Pg4gSmuKnpU1WtGe9DMJYgYyIGzTEaxQRRiE2MYSiKWOyjVBk5OeStXs8VWgWfgkYJ
+         DZu/MqJR47xhvDHrMoUTF9wM1myJaOPY9bLOtuqr+S1/ulRv47ooxl/9SMWNuAuHMkMl
+         UPW74BhUsiaWVkoJGhjsDb+TGoKi23PXzGUE1Gnrc1qNygHujPqj4ANuupjtT3vIxwyW
+         2t3hwVbQ4tlIwu8sifmrqtlbPODQMwNuJ+X8RyF38v+1H7z6LnSK2YtmesvcJRGrtmHW
+         clxMa1pqvR61iwCFPMLvAskofB0jl5/3CKYe33T0/P+zoKHWKxe4Aq1/fFVTZxetNAh2
+         LBwA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748734470; x=1749339270;
+        h=to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=DjXvAWR52Ui8HS6ga043s670E5nTXsgHCrL7uAGlNuk=;
+        b=HmvS8VJQigQmCdq72B3q6UtWH5iGP2su5Yn8u5Qb6RFnnZqmArcozB+h/lOS0UhBm0
+         zaOn1f8r7lQwMYLK93ITdkzyRcFXNNEyZ2DwomiTPt5SwSdxrghiJNrMQbOBgAO2LVqq
+         71a6DMnueS1VJkJ6sKbAYt2ZILu4cjwMAkiTaQwReB2BTB6JRKoXQoepQqumAWnaVSFl
+         2df9NZYGkOKgYt/tYKsuZ3xImMRSgE3U4OzppBfpYYDvl2g5S5ERPbObYb4xFmgjWVgC
+         aoNdIGVJxuPdOnlHwVCI++/ZJpTfOG52xGgkM8Z3808NjazY5Xtf6egHD6xR0exG70ky
+         2ZLQ==
+X-Gm-Message-State: AOJu0Yx10K3EkJwLjdY7at8N5SRCur/FS0uzw/yIvQbDEzrQSkClu6Z3
+	CO1jILjEIJ0DvMbEi3ipfQfdGC1HlvLWrXOeHKxFt8cjFF7sR8DdoPJgAS7JhiPg2uKpT3m/1Xw
+	y/5CZBj5ZghxfwnFUSWxIfYuXHc20CGwvmiNKXG1wuA==
+X-Gm-Gg: ASbGncvDWX3IdTONteq5wC0B0t4E0EyqfZ50UVLEr3XM/g7V1V3BaygJ77Qtp/HPIl2
+	42Jitwzm4YIgICiQsmfI7WHxkFH5ncjiP7qhPc3whUv8fS1KKT7sRBBkDOjJzFpI3b4UzlkpARi
+	9mu1Gqcbz9FoGTZ5Sw5lkriFydi8L+DYubfD8=
+X-Google-Smtp-Source: AGHT+IF85JxYUVlyxn4gdGE63TnjCUHyoeCEZXCsw6h1Ie/OM9QsSVPZOXWwq1wDRdS5nV2UnE9+7xVsyD7eO9Tnc0g=
+X-Received: by 2002:a17:907:9611:b0:ad5:56fa:1904 with SMTP id
+ a640c23a62f3a-adb32580624mr751528866b.44.1748734470178; Sat, 31 May 2025
+ 16:34:30 -0700 (PDT)
+MIME-Version: 1.0
+From: silas ashar <silasashar3@gmail.com>
+Date: Sun, 1 Jun 2025 01:34:19 +0200
+X-Gm-Features: AX0GCFt4Akj0g_VIjbMOvBUm3My3Gh1o7UONFM-WTgdg-yqEibvpIot_IvjeIHI
+Message-ID: <CAFeSLkpYJ69fb1LfYFcdL_-WLhWESoX3+Vet=b6pgFjQ=u2xkg@mail.gmail.com>
+Subject: E-Ticket for Your Flight Booking ID : ABC12345
+To: Fabian Ferno <fabianferno@gmail.com>
+Content-Type: multipart/alternative; boundary="000000000000e6cbab063676f808"
+
+--000000000000e6cbab063676f808
+Content-Type: text/plain; charset="UTF-8"
+
+Hello,
+
+Your flight booking is confirmed.
+
+Route: Chennai - Singapore
+Round trip - Tue, 01 April
+Booking ID: ABC12345 (Booked on 02 March, 2025)
+
+Thank you for booking with MockAir!
+
+--000000000000e6cbab063676f808
+Content-Type: text/html; charset="UTF-8"
+
+<div dir="ltr">Hello,<br><br>Your flight booking is confirmed.<br><br>Route: Chennai - Singapore<br>Round trip - Tue, 01 April<br>Booking ID: ABC12345 (Booked on 02 March, 2025)<br><br>Thank you for booking with MockAir!</div>
+
+--000000000000e6cbab063676f808--
