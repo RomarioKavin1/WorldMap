@@ -412,10 +412,25 @@ export function MeritsProvider({ children }: { children: React.ReactNode }) {
       address: string,
       signMessage: (message: string) => Promise<string>
     ): Promise<MeritsAuthResponse> => {
-      // Import the createMeritsMessage function
-      const { createMeritsMessage } = await import(
-        "@/app/(protected)/merit-miles/page"
-      );
+      // Create Merits message function
+      const createMeritsMessage = (address: string, nonce: string): string => {
+        const currentTime = new Date().toISOString();
+        const nextYear = new Date();
+        nextYear.setFullYear(nextYear.getFullYear() + 1);
+        const expirationTime = nextYear.toISOString();
+
+        return `merits.blockscout.com wants you to sign in with your Ethereum account:
+${address}
+
+Sign-In for the Blockscout Merits program.
+
+URI: https://merits.blockscout.com
+Version: 1
+Chain ID: 1
+Nonce: ${nonce}
+Issued At: ${currentTime}
+Expiration Time: ${expirationTime}`;
+      };
 
       try {
         dispatch({ type: "SET_LOADING", payload: true });
